@@ -26,6 +26,5 @@ public class Garage {
         this.active = active;
     }
 
-    // getters & setters
+   
 }
-    
