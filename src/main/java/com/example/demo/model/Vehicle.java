@@ -30,5 +30,4 @@ public class Vehicle {
         this.active = active;
     }
 
-    // getters & setters
 }

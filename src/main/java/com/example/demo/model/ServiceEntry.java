@@ -36,5 +36,5 @@ public class ServiceEntry {
         this.odometerReading = odometerReading;
     }
 
-    // getters & setters
+    
 }
