@@ -17,7 +17,17 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
-        String token = jwtTokenProvider.generateToken(request.getUsername());
-        return new AuthResponse(token, 1L, request.getUsername(), "USER");
+
+        // Dummy values (replace with DB/auth logic later)
+        Long userId = 1L;
+        String role = "USER";
+
+        String token = jwtTokenProvider.generateToken(
+                request.getUsername(),
+                role,
+                userId
+        );
+
+        return new AuthResponse(token, userId, request.getUsername(), role);
     }
 }
