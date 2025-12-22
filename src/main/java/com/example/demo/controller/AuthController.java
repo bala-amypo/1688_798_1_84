@@ -15,19 +15,30 @@ public class AuthController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    /**
+     * LOGIN API
+     * URL: POST /api/auth/login
+     */
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
 
-        // Dummy values (replace with DB/auth logic later)
+        // ✅ Normally you validate username/password from DB
+        // For now: direct login (demo purpose)
+
+        String username = request.getUsername();
+
+        // 🔥 ROLE MUST START WITH ROLE_
+        String role = "ROLE_USER";
+
         Long userId = 1L;
-        String role = "USER";
 
-        String token = jwtTokenProvider.generateToken(
-                request.getUsername(),
-                role,
-                userId
+        String token = jwtTokenProvider.generateToken(username, role, userId);
+
+        return new AuthResponse(
+                token,
+                userId,
+                username,
+                role
         );
-
-        return new AuthResponse(token, userId, request.getUsername(), role);
     }
 }
