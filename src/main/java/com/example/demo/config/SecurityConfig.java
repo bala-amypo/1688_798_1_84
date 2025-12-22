@@ -1,7 +1,6 @@
 package com.example.demo.config;
 
 import com.example.demo.security.JwtAuthenticationFilter;
-import com.example.demo.security.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,16 +13,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
-
-    // ✅ REGISTER FILTER AS A BEAN
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtTokenProvider);
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
@@ -35,17 +28,20 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
+                // ✅ Swagger allowed
                 .requestMatchers(
-                        "/api/auth/**",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html"
                 ).permitAll()
+
+                // ✅ Auth APIs allowed
+                .requestMatchers("/api/auth/**").permitAll()
+
+                // 🔐 Everything else needs authentication
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(
-                    jwtAuthenticationFilter(),
-                    UsernamePasswordAuthenticationFilter.class
-            );
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

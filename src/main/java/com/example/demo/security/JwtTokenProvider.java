@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -11,51 +12,49 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private final String SECRET_KEY = "mysecretkeymysecretkeymysecretkey12";
-    private final long EXPIRATION = 86400000; // 1 day
+    // 🔐 Secret key (must be >= 256 bits for HS256)
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-    }
+    // ⏰ Token validity (1 day)
+    private final long EXPIRATION_TIME = 24 * 60 * 60 * 1000;
 
-    // ✅ Generate token
+    // ✅ GENERATE TOKEN (MATCHES AuthController)
     public String generateToken(String username, String role, Long userId) {
+
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", role)
+                .claim("role", role)     // ROLE_USER / ROLE_ADMIN
                 .claim("userId", userId)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(getSigningKey())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key)
                 .compact();
     }
 
-    // ✅ Validate token
+    // ✅ VALIDATE TOKEN
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
+            getClaims(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    // ✅ GET USERNAME
+    // ✅ GET USERNAME (USED BY FILTER)
     public String getSubject(String token) {
         return getClaims(token).getSubject();
     }
 
-    // ✅ GET ROLE
+    // ✅ GET ROLE (USED BY FILTER)
     public String getRole(String token) {
         return getClaims(token).get("role", String.class);
     }
 
+    // 🔒 INTERNAL: READ CLAIMS
     private Claims getClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
