@@ -7,11 +7,7 @@ import com.example.demo.repository.GarageRepository;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
-
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
@@ -29,13 +25,12 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     }
 
     @Override
-    public ServiceEntry createServiceEntry(ServiceEntry entry) {
+    public ServiceEntry createServiceEntry(ServiceEntry entry,
+                                           Long vehicleId,
+                                           Long garageId) {
 
-        Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
-
-        Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
+        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
+        Garage garage = garageRepository.findById(garageId).orElse(null);
 
         entry.setVehicle(vehicle);
         entry.setGarage(garage);
@@ -44,7 +39,7 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     }
 
     @Override
-    public List<ServiceEntry> getEntriesByVehicle(Long vehicleId) {
-        return serviceEntryRepository.findByVehicleId(vehicleId);
+    public ServiceEntry getById(Long id) {
+        return serviceEntryRepository.findById(id).orElse(null);
     }
 }

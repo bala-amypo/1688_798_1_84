@@ -9,27 +9,26 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String vin;
-
-    private boolean active;
+    private String vehicleNumber;
+    private String model;
 
     public Long getId() {
         return id;
     }
 
-    public String getVin() {
-        return vin;
+    public String getVehicleNumber() {
+        return vehicleNumber;
     }
 
-    public void setVin(String vin) {
-        this.vin = vin;
+    public void setVehicleNumber(String vehicleNumber) {
+        this.vehicleNumber = vehicleNumber;
     }
 
-    public boolean isActive() {
-        return active;
+    public String getModel() {
+        return model;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setModel(String model) {
+        this.model = model;
     }
 }

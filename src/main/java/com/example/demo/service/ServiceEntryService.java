@@ -2,11 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.model.ServiceEntry;
 
-import java.util.List;
-
 public interface ServiceEntryService {
 
-    ServiceEntry createServiceEntry(ServiceEntry entry);
+    ServiceEntry createServiceEntry(ServiceEntry entry, Long vehicleId, Long garageId);
 
-    List<ServiceEntry> getEntriesByVehicle(Long vehicleId);
+    ServiceEntry getById(Long id);
 }
