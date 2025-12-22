@@ -28,21 +28,32 @@ public class SecurityConfig {
     ) throws Exception {
 
         http
+            // Disable CSRF (required for JWT)
             .csrf(csrf -> csrf.disable())
+
+            // Stateless session
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+
+            // Authorization rules
             .authorizeHttpRequests(auth -> auth
+                // Public endpoints
                 .requestMatchers(
                         "/api/auth/**",
-                        "/v3/api-docs/**",
                         "/swagger-ui/**",
-                        "/swagger-ui.html"
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**"
                 ).permitAll()
+
+                // All other endpoints need JWT
                 .anyRequest().authenticated()
             )
+
+            // Default basic config
             .httpBasic(withDefaults());
 
+        // JWT Filter
         http.addFilterBefore(
                 jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class
@@ -53,8 +64,8 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config
+            AuthenticationConfiguration configuration
     ) throws Exception {
-        return config.getAuthenticationManager();
+        return configuration.getAuthenticationManager();
     }
 }
