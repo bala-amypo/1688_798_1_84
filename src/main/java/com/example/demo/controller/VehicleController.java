@@ -1,31 +1,39 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.Vehicle;
+import com.example.demo.service.VehicleService;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/vehicles")
 public class VehicleController {
 
-    private final VehicleService service;
+    private final VehicleService vehicleService;
 
-    public VehicleController(VehicleService service) {
-        this.service = service;
+    public VehicleController(VehicleService vehicleService) {
+        this.vehicleService = vehicleService;
     }
 
     @PostMapping
-    public Vehicle create(@RequestBody Vehicle v) {
-        return service.createVehicle(v);
+    public Vehicle create(@RequestBody Vehicle vehicle) {
+        return vehicleService.createVehicle(vehicle);
     }
 
     @GetMapping("/{id}")
     public Vehicle get(@PathVariable Long id) {
-        return service.getVehicleById(id);
+        return vehicleService.getVehicleById(id);
     }
 
     @GetMapping("/owner/{ownerId}")
     public List<Vehicle> byOwner(@PathVariable Long ownerId) {
-        return service.getVehiclesByOwner(ownerId);
+        return vehicleService.getVehiclesByOwner(ownerId);
     }
 
     @PostMapping("/{id}/deactivate")
     public void deactivate(@PathVariable Long id) {
-        service.deactivateVehicle(id);
+        vehicleService.deactivateVehicle(id);
     }
 }
-    
