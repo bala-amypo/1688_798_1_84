@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Vehicle;
+import java.util.List;
 
 public interface VehicleService {
 
-    Vehicle save(Vehicle vehicle);
+    Vehicle saveVehicle(Vehicle vehicle);
 
-    Vehicle getById(Long id);
+    Vehicle getVehicleById(Long id);
+
+    List<Vehicle> getAllVehicles();
 }

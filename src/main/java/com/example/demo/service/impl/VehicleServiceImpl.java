@@ -8,19 +8,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
-    private final VehicleRepository repository;
+    private final VehicleRepository repo;
 
-    public VehicleServiceImpl(VehicleRepository repository) {
-        this.repository = repository;
+    public VehicleServiceImpl(VehicleRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
     public Vehicle save(Vehicle vehicle) {
-        return repository.save(vehicle);
-    }
-
-    @Override
-    public Vehicle getById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repo.save(vehicle);
     }
 }
