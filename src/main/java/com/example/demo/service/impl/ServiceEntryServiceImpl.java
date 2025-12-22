@@ -1,45 +1,28 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.Garage;
-import com.example.demo.model.ServiceEntry;
-import com.example.demo.model.Vehicle;
-import com.example.demo.repository.GarageRepository;
-import com.example.demo.repository.ServiceEntryRepository;
-import com.example.demo.repository.VehicleRepository;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
 
-    private final ServiceEntryRepository serviceEntryRepository;
-    private final VehicleRepository vehicleRepository;
-    private final GarageRepository garageRepository;
+    private final ServiceEntryRepository entryRepo;
+    private final VehicleRepository vehicleRepo;
+    private final GarageRepository garageRepo;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
-                                   VehicleRepository vehicleRepository,
-                                   GarageRepository garageRepository) {
-        this.serviceEntryRepository = serviceEntryRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.garageRepository = garageRepository;
+    public ServiceEntryServiceImpl(ServiceEntryRepository entryRepo,
+                                   VehicleRepository vehicleRepo,
+                                   GarageRepository garageRepo) {
+        this.entryRepo = entryRepo;
+        this.vehicleRepo = vehicleRepo;
+        this.garageRepo = garageRepo;
     }
 
-    @Override
-    public ServiceEntry createServiceEntry(ServiceEntry entry,
-                                           Long vehicleId,
-                                           Long garageId) {
-
-        Vehicle vehicle = vehicleRepository.findById(vehicleId).orElse(null);
-        Garage garage = garageRepository.findById(garageId).orElse(null);
-
-        entry.setVehicle(vehicle);
-        entry.setGarage(garage);
-
-        return serviceEntryRepository.save(entry);
-    }
-
-    @Override
-    public ServiceEntry getById(Long id) {
-        return serviceEntryRepository.findById(id).orElse(null);
+    public ServiceEntry create(ServiceEntry entry, Long vehicleId, Long garageId) {
+        entry.setVehicle(vehicleRepo.findById(vehicleId).orElse(null));
+        entry.setGarage(garageRepo.findById(garageId).orElse(null));
+        return entryRepo.save(entry);
     }
 }

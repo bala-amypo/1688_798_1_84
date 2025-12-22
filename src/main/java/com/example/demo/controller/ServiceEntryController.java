@@ -4,10 +4,8 @@ import com.example.demo.model.ServiceEntry;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/service-entries")
+@RequestMapping("/api/service-entries")
 public class ServiceEntryController {
 
     private final ServiceEntryService serviceEntryService;
@@ -16,13 +14,15 @@ public class ServiceEntryController {
         this.serviceEntryService = serviceEntryService;
     }
 
-    @PostMapping
-    public ServiceEntry create(@RequestBody ServiceEntry entry) {
-        return serviceEntryService.createServiceEntry(entry);
+    @PostMapping("/{vehicleId}/{garageId}")
+    public ServiceEntry create(@RequestBody ServiceEntry entry,
+                               @PathVariable Long vehicleId,
+                               @PathVariable Long garageId) {
+        return serviceEntryService.createServiceEntry(entry, vehicleId, garageId);
     }
 
-    @GetMapping("/vehicle/{vehicleId}")
-    public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
-        return serviceEntryService.getEntriesByVehicle(vehicleId);
+    @GetMapping("/{id}")
+    public ServiceEntry getById(@PathVariable Long id) {
+        return serviceEntryService.getById(id);
     }
 }

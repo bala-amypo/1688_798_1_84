@@ -2,13 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
 import com.example.demo.service.VehicleService;
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/vehicles")
+@RequestMapping("/api/vehicles")
 public class VehicleController {
 
     private final VehicleService vehicleService;
@@ -18,22 +17,17 @@ public class VehicleController {
     }
 
     @PostMapping
-    public Vehicle create(@RequestBody Vehicle vehicle) {
-        return vehicleService.createVehicle(vehicle);
+    public Vehicle save(@RequestBody Vehicle vehicle) {
+        return vehicleService.saveVehicle(vehicle);
     }
 
     @GetMapping("/{id}")
-    public Vehicle get(@PathVariable Long id) {
+    public Vehicle getById(@PathVariable Long id) {
         return vehicleService.getVehicleById(id);
     }
 
-    @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> byOwner(@PathVariable Long ownerId) {
-        return vehicleService.getVehiclesByOwner(ownerId);
-    }
-
-    @PostMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id) {
-        vehicleService.deactivateVehicle(id);
+    @GetMapping
+    public List<Vehicle> getAll() {
+        return vehicleService.getAllVehicles();
     }
 }
