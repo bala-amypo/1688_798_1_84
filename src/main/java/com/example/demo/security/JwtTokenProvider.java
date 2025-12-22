@@ -1,8 +1,6 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -12,49 +10,50 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    // 🔐 Secret key (must be >= 256 bits for HS256)
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final String SECRET_KEY =
+            "mysecretkeymysecretkeymysecretkeymysecretkey";
 
-    // ⏰ Token validity (1 day)
-    private final long EXPIRATION_TIME = 24 * 60 * 60 * 1000;
+    private static final long EXPIRATION_TIME = 86400000; // 1 day
 
-    // ✅ GENERATE TOKEN (MATCHES AuthController)
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    }
+
+    // ✅ CREATE TOKEN
     public String generateToken(String username, String role, Long userId) {
-
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", role)     // ROLE_USER / ROLE_ADMIN
+                .claim("role", role)     // MUST be ROLE_USER
                 .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(key)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    // ✅ GET USERNAME
+    public String getUsernameFromToken(String token) {
+        return parseClaims(token).getSubject();
+    }
+
+    // ✅ GET ROLE
+    public String getRoleFromToken(String token) {
+        return parseClaims(token).get("role", String.class);
     }
 
     // ✅ VALIDATE TOKEN
     public boolean validateToken(String token) {
         try {
-            getClaims(token);
+            parseClaims(token);
             return true;
-        } catch (Exception e) {
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
-    // ✅ GET USERNAME (USED BY FILTER)
-    public String getSubject(String token) {
-        return getClaims(token).getSubject();
-    }
-
-    // ✅ GET ROLE (USED BY FILTER)
-    public String getRole(String token) {
-        return getClaims(token).get("role", String.class);
-    }
-
-    // 🔒 INTERNAL: READ CLAIMS
-    private Claims getClaims(String token) {
+    private Claims parseClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

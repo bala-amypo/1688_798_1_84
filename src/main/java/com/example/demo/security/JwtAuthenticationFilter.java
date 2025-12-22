@@ -7,13 +7,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
 
-@Component
+@Component   // 🔥 MUST BE PRESENT
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -29,24 +30,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String header = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-
-            String token = authHeader.substring(7);
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
 
             if (jwtTokenProvider.validateToken(token)) {
 
-                String username = jwtTokenProvider.getSubject(token);
-                String role = jwtTokenProvider.getRole(token);
+                String username = jwtTokenProvider.getUsernameFromToken(token);
+                String role = jwtTokenProvider.getRoleFromToken(token);
+
+                // 🔥 ROLE MUST START WITH ROLE_
+                SimpleGrantedAuthority authority =
+                        new SimpleGrantedAuthority(role);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 username,
                                 null,
-                                List.of(new SimpleGrantedAuthority(role))
+                                List.of(authority)
                         );
 
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+
+                // ✅ THIS LINE FIXES 403
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
