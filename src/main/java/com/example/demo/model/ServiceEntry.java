@@ -1,40 +1,15 @@
-package com.example.demo.model;
+public Vehicle getVehicle() {
+    return vehicle;
+}
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
+public void setVehicle(Vehicle vehicle) {
+    this.vehicle = vehicle;
+}
 
-@Entity
-@Table(name = "service_entries")
-public class ServiceEntry {
+public Garage getGarage() {
+    return garage;
+}
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    private Vehicle vehicle;
-
-    @ManyToOne
-    private Garage garage;
-
-    private String serviceType;
-    private LocalDate serviceDate;
-    private Integer odometerReading;
-
-    @OneToMany(mappedBy = "serviceEntry")
-    private List<ServicePart> parts;
-
-    public ServiceEntry() {}
-
-    public ServiceEntry(Vehicle vehicle, Garage garage, String serviceType,
-                        LocalDate serviceDate, Integer odometerReading) {
-        this.vehicle = vehicle;
-        this.garage = garage;
-        this.serviceType = serviceType;
-        this.serviceDate = serviceDate;
-        this.odometerReading = odometerReading;
-    }
-
-    
+public void setGarage(Garage garage) {
+    this.garage = garage;
 }
