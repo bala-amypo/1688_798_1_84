@@ -10,6 +10,14 @@ public class Garage {
     private Long id;
 
     private String garageName;
+    private String address;
+    private Boolean active;
+
+    public Garage() {}
+
+    public Long getId() {
+        return id;
+    }
 
     public String getGarageName() {
         return garageName;
@@ -17,5 +25,13 @@ public class Garage {
 
     public void setGarageName(String garageName) {
         this.garageName = garageName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public Boolean getActive() {
+        return active;
     }
 }
