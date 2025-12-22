@@ -1,10 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "vehicles", uniqueConstraints = @UniqueConstraint(columnNames = "vin"))
 public class Vehicle {
 
     @Id
@@ -12,22 +10,26 @@ public class Vehicle {
     private Long id;
 
     private String vin;
-    private String make;
-    private String model;
-    private Long ownerId;
-    private Boolean active;
 
-    @OneToMany(mappedBy = "vehicle")
-    private List<ServiceEntry> serviceEntries;
+    private boolean active;
 
-    public Vehicle() {}
-
-    public Vehicle(String vin, String make, String model, Long ownerId, Boolean active) {
-        this.vin = vin;
-        this.make = make;
-        this.model = model;
-        this.ownerId = ownerId;
-        this.active = active;
+    public Long getId() {
+        return id;
     }
 
+    public String getVin() {
+        return vin;
+    }
+
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

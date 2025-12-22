@@ -1,20 +1,28 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.ServiceEntry;
+import com.example.demo.service.ServiceEntryService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/service-entries")
 public class ServiceEntryController {
 
-    private final ServiceEntryService service;
+    private final ServiceEntryService serviceEntryService;
 
-    public ServiceEntryController(ServiceEntryService service) {
-        this.service = service;
+    public ServiceEntryController(ServiceEntryService serviceEntryService) {
+        this.serviceEntryService = serviceEntryService;
     }
 
     @PostMapping
     public ServiceEntry create(@RequestBody ServiceEntry entry) {
-        return service.createServiceEntry(entry);
+        return serviceEntryService.createServiceEntry(entry);
     }
 
     @GetMapping("/vehicle/{vehicleId}")
-    public List<ServiceEntry> list(@PathVariable Long vehicleId) {
-        return service.getEntriesForVehicle(vehicleId);
+    public List<ServiceEntry> getByVehicle(@PathVariable Long vehicleId) {
+        return serviceEntryService.getEntriesByVehicle(vehicleId);
     }
 }
