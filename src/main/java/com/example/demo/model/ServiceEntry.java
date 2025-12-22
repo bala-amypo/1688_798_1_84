@@ -9,17 +9,29 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String description;
+    @ManyToOne
+    private Vehicle vehicle;
+
+    @ManyToOne
+    private Garage garage;
 
     public Long getId() {
         return id;
     }
 
-    public String getDescription() {
-        return description;
+    public Vehicle getVehicle() {
+        return vehicle;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Garage getGarage() {
+        return garage;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public void setGarage(Garage garage) {
+        this.garage = garage;
     }
 }

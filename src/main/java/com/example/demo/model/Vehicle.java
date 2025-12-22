@@ -9,26 +9,17 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String vehicleNumber;
-    private String model;
+    private String number;
 
     public Long getId() {
         return id;
     }
 
-    public String getVehicleNumber() {
-        return vehicleNumber;
+    public String getNumber() {
+        return number;
     }
 
-    public void setVehicleNumber(String vehicleNumber) {
-        this.vehicleNumber = vehicleNumber;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
+    public void setNumber(String number) {
+        this.number = number;
     }
 }

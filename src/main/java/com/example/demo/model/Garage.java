@@ -9,29 +9,17 @@ public class Garage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String garageName;
-    private String address;
-    private Boolean active;
-
-    public Garage() {}
+    private String name;
 
     public Long getId() {
         return id;
     }
 
-    public String getGarageName() {
-        return garageName;
+    public String getName() {
+        return name;
     }
 
-    public void setGarageName(String garageName) {
-        this.garageName = garageName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public Boolean getActive() {
-        return active;
+    public void setName(String name) {
+        this.name = name;
     }
 }

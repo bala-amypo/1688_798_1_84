@@ -23,20 +23,20 @@ public class ServicePart {
         return partName;
     }
 
-    public void setPartName(String partName) {
-        this.partName = partName;
-    }
-
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public ServiceEntry getServiceEntry() {
         return serviceEntry;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public void setServiceEntry(ServiceEntry serviceEntry) {
