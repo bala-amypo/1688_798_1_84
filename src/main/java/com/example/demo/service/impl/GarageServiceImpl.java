@@ -5,16 +5,29 @@ import com.example.demo.repository.GarageRepository;
 import com.example.demo.service.GarageService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GarageServiceImpl implements GarageService {
 
-    private final GarageRepository repo;
+    private final GarageRepository garageRepository;
 
-    public GarageServiceImpl(GarageRepository repo) {
-        this.repo = repo;
+    public GarageServiceImpl(GarageRepository garageRepository) {
+        this.garageRepository = garageRepository;
     }
 
-    public Garage save(Garage garage) {
-        return repo.save(garage);
+    @Override
+    public Garage createGarage(Garage garage) {
+        return garageRepository.save(garage);
+    }
+
+    @Override
+    public Garage getGarageById(Long id) {
+        return garageRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Garage> getAllGarages() {
+        return garageRepository.findAll();
     }
 }

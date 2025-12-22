@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface GarageService {
 
-    Garage saveGarage(Garage garage);
+    Garage createGarage(Garage garage);
 
     Garage getGarageById(Long id);
 

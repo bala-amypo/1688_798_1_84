@@ -18,6 +18,6 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         String token = jwtTokenProvider.generateToken(request.getUsername());
-        return new AuthResponse(token);
+        return new AuthResponse(token, 1L, request.getUsername(), "USER");
     }
 }

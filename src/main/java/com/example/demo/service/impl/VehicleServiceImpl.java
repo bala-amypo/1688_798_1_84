@@ -5,16 +5,29 @@ import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.VehicleService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
-    private final VehicleRepository repo;
+    private final VehicleRepository vehicleRepository;
 
-    public VehicleServiceImpl(VehicleRepository repo) {
-        this.repo = repo;
+    public VehicleServiceImpl(VehicleRepository vehicleRepository) {
+        this.vehicleRepository = vehicleRepository;
     }
 
-    public Vehicle save(Vehicle vehicle) {
-        return repo.save(vehicle);
+    @Override
+    public Vehicle saveVehicle(Vehicle vehicle) {
+        return vehicleRepository.save(vehicle);
+    }
+
+    @Override
+    public Vehicle getVehicleById(Long id) {
+        return vehicleRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Vehicle> getAllVehicles() {
+        return vehicleRepository.findAll();
     }
 }
