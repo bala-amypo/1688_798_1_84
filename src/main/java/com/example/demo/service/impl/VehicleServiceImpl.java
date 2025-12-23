@@ -18,10 +18,15 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Vehicle createVehicle(Vehicle vehicle) {
+
+        // ✅ uses getVin()
         if (vehicleRepository.existsByVin(vehicle.getVin())) {
             throw new RuntimeException("Vehicle with this VIN already exists");
         }
+
+        // ✅ uses setActive()
         vehicle.setActive(true);
+
         return vehicleRepository.save(vehicle);
     }
 
@@ -38,10 +43,11 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Vehicle deactivateVehicle(Long id) {
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+        Vehicle vehicle = getVehicleById(id);
 
+        // ✅ uses setActive()
         vehicle.setActive(false);
+
         return vehicleRepository.save(vehicle);
     }
 }

@@ -20,8 +20,48 @@ public class Vehicle {
     private boolean active = true;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
+    @JoinColumn(name = "owner_id")
     private User owner;
 
-    // getters & setters
+    // ---------- Getters & Setters ----------
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getVin() {          // ✅ REQUIRED
+        return vin;
+    }
+
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public boolean isActive() {        // ✅ BOOLEAN GETTER
+        return active;
+    }
+
+    public void setActive(boolean active) {   // ✅ REQUIRED
+        this.active = active;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 }
