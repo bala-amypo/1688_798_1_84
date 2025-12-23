@@ -1,35 +1,41 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "service_entries")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ServiceEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Vehicle vehicle;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Garage garage;
 
     private String serviceType;
-    private LocalDate serviceDate;
+    private Date serviceDate;
     private Integer odometerReading;
     private String description;
+    private Timestamp recordedAt = new Timestamp(System.currentTimeMillis());
 
-    @CreationTimestamp
-    private Timestamp recordedAt;
+    public ServiceEntry() {}
+
+    public Long getId() { return id; }
+    public Vehicle getVehicle() { return vehicle; }
+    public void setVehicle(Vehicle vehicle) { this.vehicle = vehicle; }
+
+    public Garage getGarage() { return garage; }
+    public void setGarage(Garage garage) { this.garage = garage; }
+
+    public Integer getOdometerReading() { return odometerReading; }
+    public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
+
+    public Date getServiceDate() { return serviceDate; }
+    public void setServiceDate(Date serviceDate) { this.serviceDate = serviceDate; }
 }

@@ -1,29 +1,24 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "verification_logs")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class VerificationLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private ServiceEntry serviceEntry;
 
-    @CreationTimestamp
-    private Timestamp verifiedAt;
-
+    private Timestamp verifiedAt = new Timestamp(System.currentTimeMillis());
     private Boolean verifiedBySystem = true;
     private String notes;
+
+    public VerificationLog() {}
+
+    public Long getId() { return id; }
 }

@@ -1,27 +1,27 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "service_parts")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ServicePart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private ServiceEntry serviceEntry;
 
     private String partName;
     private String partNumber;
     private BigDecimal cost;
     private Integer quantity;
+
+    public ServicePart() {}
+
+    public Long getId() { return id; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
 }
