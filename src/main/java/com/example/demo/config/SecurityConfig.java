@@ -1,29 +1,54 @@
-@Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+package com.example.demo.config;
 
-    http
-        .csrf(csrf -> csrf.disable())
-        .sessionManagement(session ->
-            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
-        .authorizeHttpRequests(auth -> auth
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 
-            // ✅ Swagger
-            .requestMatchers(
-                "/v3/api-docs/**",
-                "/swagger-ui/**",
-                "/swagger-ui.html"
-            ).permitAll()
+@Configuration
+public class SecurityConfig {
 
-            // ✅ Auth
-            .requestMatchers("/api/auth/**").permitAll()
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-            // ✅ ALLOW GARAGE API (FIX)
-            .requestMatchers("/garages/**").permitAll()
+        http
+            // ✅ Disable CSRF (important for Swagger POST)
+            .csrf(csrf -> csrf.disable())
 
-            // 🔐 Others
-            .anyRequest().authenticated()
-        );
+            // ✅ Stateless (no sessions)
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
 
-    return http.build();
+            // ✅ Authorization rules
+            .authorizeHttpRequests(auth -> auth
+
+                // ✅ Swagger allowed
+                .requestMatchers(
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html"
+                ).permitAll()
+
+                // ✅ Auth APIs allowed
+                .requestMatchers("/api/auth/**").permitAll()
+
+                // ✅ IMPORTANT: Allow Garage APIs (FIX FOR 403)
+                .requestMatchers("/garages/**").permitAll()
+
+                // 🔐 Everything else requires auth
+                .anyRequest().authenticated()
+            );
+
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 }
