@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.security.JwtTokenProvider;
-import com.example.demo.controller.LoginRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
