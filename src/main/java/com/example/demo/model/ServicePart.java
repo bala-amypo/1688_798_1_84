@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "service_parts")
@@ -12,16 +11,32 @@ public class ServicePart {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "service_entry_id")
     private ServiceEntry serviceEntry;
 
     private String partName;
-    private String partNumber;
-    private BigDecimal cost;
     private Integer quantity;
 
-    public ServicePart() {}
+    public ServicePart() {
+    }
 
+    public ServicePart(ServiceEntry serviceEntry, String partName, Integer quantity) {
+        this.serviceEntry = serviceEntry;
+        this.partName = partName;
+        this.quantity = quantity;
+    }
+
+    // Getters and Setters
     public Long getId() { return id; }
+
+    public ServiceEntry getServiceEntry() { return serviceEntry; }
+    public void setServiceEntry(ServiceEntry serviceEntry) {
+        this.serviceEntry = serviceEntry;
+    }
+
+    public String getPartName() { return partName; }
+    public void setPartName(String partName) { this.partName = partName; }
+
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
 }
