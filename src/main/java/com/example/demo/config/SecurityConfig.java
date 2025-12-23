@@ -6,9 +6,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -17,21 +24,31 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .formLogin(form -> form.disable())
             .httpBasic(basic -> basic.disable())
+
             .authorizeHttpRequests(auth -> auth
+                // ✅ Swagger
                 .requestMatchers(
                     "/v3/api-docs/**",
                     "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/api/**",
-                    "/auth/**"
+                    "/swagger-ui.html"
                 ).permitAll()
+
+                // ✅ Auth endpoints (NO TOKEN REQUIRED)
+                .requestMatchers("/auth/**").permitAll()
+
+                // ✅ Allow APIs (for now)
+                .requestMatchers("/api/**").permitAll()
+
+                // ❌ Everything else needs authentication
                 .anyRequest().authenticated()
-            );
+            )
+
+            // ✅ JWT FILTER POSITION (IMPORTANT)
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
