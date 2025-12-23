@@ -64,8 +64,7 @@
 
 package com.example.demo.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -78,7 +77,6 @@ public class JwtTokenProvider {
     private static final long EXPIRATION_TIME = 86400000; // 1 day
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    // MAIN METHOD (username + role)
     public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
@@ -89,8 +87,38 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // OVERLOADED METHOD (username only)
     public String generateToken(String username) {
         return generateToken(username, "USER");
+    }
+
+    // ✅ REQUIRED BY JwtAuthenticationFilter
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public String getUsername(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public String getRole(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
     }
 }
