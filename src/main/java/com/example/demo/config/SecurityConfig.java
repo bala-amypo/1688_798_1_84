@@ -1,135 +1,60 @@
-// package com.example.demo.config;
-
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.security.authentication.AuthenticationManager;
-// import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-// import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-// import org.springframework.security.config.http.SessionCreationPolicy;
-// import org.springframework.security.web.SecurityFilterChain;
-
-// @Configuration
-// public class SecurityConfig {
-
-//     @Bean
-//     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-//         http
-//             // ✅ Disable CSRF (important for Swagger POST)
-//             .csrf(csrf -> csrf.disable())
-
-//             // ✅ Stateless (no sessions)
-//             .sessionManagement(session ->
-//                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//             )
-
-//             // ✅ Authorization rules
-//             .authorizeHttpRequests(auth -> auth
-
-//                 // ✅ Swagger allowed
-//                 .requestMatchers(
-//                         "/v3/api-docs/**",
-//                         "/swagger-ui/**",
-//                         "/swagger-ui.html"
-//                 ).permitAll()
-
-//                 // ✅ Auth APIs allowed
-//                 .requestMatchers("/api/auth/**").permitAll()
-
-//                 // ✅ IMPORTANT: Allow Garage APIs (FIX FOR 403)
-//                 .requestMatchers("/garages/**").permitAll()
-
-//                 // 🔐 Everything else requires auth
-//                 .anyRequest().authenticated()
-//             );
-
-//         return http.build();
-//     }
-
-//     @Bean
-//     public AuthenticationManager authenticationManager(
-//             AuthenticationConfiguration configuration) throws Exception {
-//         return configuration.getAuthenticationManager();
-//     }
-// }
-
-// @Configuration
-// public class SecurityConfig {
-
-//     @Bean
-//     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-//         http
-//             // Disable CSRF for REST APIs
-//             .csrf(csrf -> csrf.disable())
-
-//             // Stateless API
-//             .sessionManagement(session ->
-//                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//             )
-
-//             .authorizeHttpRequests(auth -> auth
-
-//                 // Swagger
-//                 .requestMatchers(
-//                         "/v3/api-docs/**",
-//                         "/swagger-ui/**",
-//                         "/swagger-ui.html"
-//                 ).permitAll()
-
-//                 // Auth APIs
-//                 .requestMatchers("/api/auth/**").permitAll()
-
-//                 // ✅ FIX: Vehicles API
-//                 .requestMatchers("/api/vehicles/**").permitAll()
-
-//                 // Everything else secured
-//                 .anyRequest().authenticated()
-//             );
-
-//         return http.build();
-//     }
-
-//     @Bean
-//     public AuthenticationManager authenticationManager(
-//             AuthenticationConfiguration configuration) throws Exception {
-//         return configuration.getAuthenticationManager();
-//     }
-// }
-
-
+//SecurityConfig.java
 package com.example.demo.config;
 
+import com.example.demo.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableMethodSecurity   
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+            // ✅ Disable CSRF
             .csrf(csrf -> csrf.disable())
+
+            // ✅ Disable CORS blocking (Swagger fix)
+            .cors(cors -> cors.disable())
+
+            // ✅ Stateless JWT
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+
             .authorizeHttpRequests(auth -> auth
+
+                // ✅ Swagger URLs
                 .requestMatchers(
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html"
                 ).permitAll()
+
+                // ✅ Auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/vehicles/**").permitAll()
+
+                // 🔐 Everything else needs JWT
                 .anyRequest().authenticated()
-            );
+            )
+
+            // ✅ JWT filter
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
