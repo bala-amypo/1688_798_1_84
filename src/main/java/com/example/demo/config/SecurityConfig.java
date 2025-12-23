@@ -2,7 +2,7 @@ package com.example.demo.config;
 
 import com.example.demo.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotationConfiguration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -10,9 +10,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 @Configuration
-@EnableMethodSecurity   
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -25,34 +26,37 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // ✅ Disable CSRF
+            // Disable CSRF (JWT based)
             .csrf(csrf -> csrf.disable())
 
-            // ✅ Disable CORS blocking (Swagger fix)
-            .cors(cors -> cors.disable())
+            // Enable CORS (required for Swagger)
+            .cors(cors -> {})
 
-            // ✅ Stateless JWT
+            // Stateless session
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
             .authorizeHttpRequests(auth -> auth
 
-                // ✅ Swagger URLs
+                // Swagger endpoints
                 .requestMatchers(
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html"
                 ).permitAll()
 
-                // ✅ Auth endpoints
+                // Auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
 
-                // 🔐 Everything else needs JWT
+                // Allow OPTIONS (Swagger preflight)
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // All other APIs require JWT
                 .anyRequest().authenticated()
             )
 
-            // ✅ JWT filter
+            // JWT filter
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
