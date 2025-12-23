@@ -1,3 +1,7 @@
+package com.example.demo.model;
+
+import jakarta.persistence.*;
+
 @Entity
 @Table(name = "vehicles")
 public class Vehicle {
@@ -6,18 +10,44 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String vehicleNumber;
-    private String model;
     private String vin;
+
+    private String model;
+
     private boolean active;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private Owner owner;   // 🔴 REQUIRED
+    private Owner owner;
 
-    // getters & setters
+    // ===== getters & setters =====
+
     public Long getId() {
         return id;
+    }
+
+    public String getVin() {
+        return vin;
+    }
+
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Owner getOwner() {
