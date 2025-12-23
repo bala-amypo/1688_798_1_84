@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -16,8 +17,8 @@ public class ServiceEntryController {
     }
 
     @PostMapping
-    public ServiceEntry create(@RequestBody ServiceEntry serviceEntry) {
-        return service.save(serviceEntry);
+    public ServiceEntry create(@RequestBody ServiceEntry entry) {
+        return service.save(entry);
     }
 
     @GetMapping("/garage/{garageId}")

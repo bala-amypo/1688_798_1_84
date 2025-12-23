@@ -4,6 +4,7 @@ import com.example.demo.model.ServiceEntry;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -22,6 +23,10 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
 
     @Override
     public List<ServiceEntry> getByGarageAndMinOdometer(Long garageId, int minOdometer) {
-        return repository.findByGarageIdAndOdometerGreaterThanEqual(garageId, minOdometer);
+        // 🔥 NOW THIS METHOD EXISTS
+        return repository.findByGarageIdAndOdometerGreaterThanEqual(
+                garageId,
+                minOdometer
+        );
     }
 }
