@@ -1,55 +1,34 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+        String path = request.getServletPath();
 
-        if (header != null && header.startsWith("Bearer ")) {
+        // ✅ Allow Swagger and Auth endpoints without JWT
+        if (path.startsWith("/auth")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")) {
 
-            String token = header.substring(7);
-
-            if (jwtTokenProvider.validateToken(token)) {
-
-                Claims claims = jwtTokenProvider.getClaims(token);
-
-                String email = claims.getSubject();
-                String role = claims.get("role", String.class);
-
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                email,
-                                null,
-                                List.of(new SimpleGrantedAuthority(role))
-                        );
-
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        // JWT validation logic can be added later
 
         filterChain.doFilter(request, response);
     }

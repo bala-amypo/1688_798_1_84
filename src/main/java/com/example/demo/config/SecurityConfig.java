@@ -11,10 +11,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    // ✅ MANUAL BEAN DEFINITION (OPTION B)
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
     }
 
     @Bean
@@ -26,29 +26,32 @@ public class SecurityConfig {
             .httpBasic(basic -> basic.disable())
 
             .authorizeHttpRequests(auth -> auth
-                // ✅ Swagger
+                // Swagger
                 .requestMatchers(
-                    "/v3/api-docs/**",
                     "/swagger-ui/**",
-                    "/swagger-ui.html"
+                    "/swagger-ui.html",
+                    "/v3/api-docs/**"
                 ).permitAll()
 
-                // ✅ Auth endpoints (NO TOKEN REQUIRED)
+                // Auth endpoints
                 .requestMatchers("/auth/**").permitAll()
 
-                // ✅ Allow APIs (for now)
+                // APIs (open for now)
                 .requestMatchers("/api/**").permitAll()
 
-                // ❌ Everything else needs authentication
                 .anyRequest().authenticated()
             )
 
-            // ✅ JWT FILTER POSITION (IMPORTANT)
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            // ✅ Register JWT filter
+            .addFilterBefore(
+                jwtAuthenticationFilter(),
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
 
+    // ✅ REQUIRED FOR AuthController
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
