@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.security.JwtTokenProvider;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -16,10 +15,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestParam String username) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
 
+        String username = request.getUsername();
+
+        // In real apps → validate user & get role from DB
         String token = jwtTokenProvider.generateToken(username);
 
-        return Map.of("token", token);
+        return ResponseEntity.ok(token);
     }
 }
