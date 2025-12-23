@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 public class ServiceEntry {
@@ -9,24 +10,13 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // IMPORTANT: field name = garageId
-    private Long garageId;
+    private String serviceType;
+    private Double cost;
+    private LocalDate serviceDate;
 
-    // IMPORTANT: field name = odometer
-    private int odometer;
-
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "garage_id")
+    private Garage garage;   // 🔴 THIS WAS MISSING
 
     // getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public Long getGarageId() { return garageId; }
-    public void setGarageId(Long garageId) { this.garageId = garageId; }
-
-    public int getOdometer() { return odometer; }
-    public void setOdometer(int odometer) { this.odometer = odometer; }
-
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
 }
