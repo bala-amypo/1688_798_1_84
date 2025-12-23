@@ -1,62 +1,59 @@
-package com.example.demo.security;
+// package com.example.demo.security;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+// import jakarta.servlet.FilterChain;
+// import jakarta.servlet.ServletException;
+// import jakarta.servlet.http.HttpServletRequest;
+// import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
-import java.util.List;
+// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+// import org.springframework.security.core.authority.SimpleGrantedAuthority;
+// import org.springframework.security.core.context.SecurityContextHolder;
+// import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+// import org.springframework.web.filter.OncePerRequestFilter;
 
-@Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+// import java.io.IOException;
+// import java.util.List;
 
-    private final JwtTokenProvider jwtTokenProvider;
+// public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+//     private final JwtTokenProvider jwtTokenProvider;
 
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
+//     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
+//         this.jwtTokenProvider = jwtTokenProvider;
+//     }
 
-        String header = request.getHeader("Authorization");
+//     @Override
+//     protected void doFilterInternal(
+//             HttpServletRequest request,
+//             HttpServletResponse response,
+//             FilterChain filterChain
+//     ) throws ServletException, IOException {
 
-        if (header != null && header.startsWith("Bearer ")) {
+//         String header = request.getHeader("Authorization");
 
-            String token = header.substring(7);
+//         if (header != null && header.startsWith("Bearer ")) {
+//             String token = header.substring(7);
 
-            if (jwtTokenProvider.validateToken(token)) {
+//             if (jwtTokenProvider.validateToken(token)) {
 
-                String username = jwtTokenProvider.getUsername(token);
-                String role = jwtTokenProvider.getRole(token);
+//                 String username = jwtTokenProvider.getUsername(token);
+//                 String role = jwtTokenProvider.getRole(token);
 
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                username,
-                                null,
-                                List.of(new SimpleGrantedAuthority(role))
-                        );
+//                 UsernamePasswordAuthenticationToken authentication =
+//                         new UsernamePasswordAuthenticationToken(
+//                                 username,
+//                                 null,
+//                                 List.of(new SimpleGrantedAuthority("ROLE_" + role))
+//                         );
 
-                auth.setDetails(
-                        new WebAuthenticationDetailsSource()
-                                .buildDetails(request));
+//                 authentication.setDetails(
+//                         new WebAuthenticationDetailsSource().buildDetails(request)
+//                 );
 
-                SecurityContextHolder.getContext()
-                        .setAuthentication(auth);
-            }
-        }
+//                 SecurityContextHolder.getContext().setAuthentication(authentication);
+//             }
+//         }
 
-        filterChain.doFilter(request, response);
-    }
-}
+//         filterChain.doFilter(request, response);
+//     }
+// }
