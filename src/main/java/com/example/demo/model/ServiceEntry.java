@@ -2,8 +2,6 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 
-
-
 @Entity
 @Table(name = "service_entries")
 public class ServiceEntry {
@@ -13,6 +11,10 @@ public class ServiceEntry {
     private Long id;
 
     private int odometer;
+
+    @ManyToOne
+    @JoinColumn(name = "vehicle_id")
+    private Vehicle vehicle;   // 🔴 THIS FIXES THE ERROR
 
     @ManyToOne
     @JoinColumn(name = "garage_id")
@@ -31,6 +33,14 @@ public class ServiceEntry {
         this.odometer = odometer;
     }
 
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
     public Garage getGarage() {
         return garage;
     }
@@ -39,5 +49,3 @@ public class ServiceEntry {
         this.garage = garage;
     }
 }
-
-
