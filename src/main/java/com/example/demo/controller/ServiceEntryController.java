@@ -21,7 +21,7 @@ public class ServiceEntryController {
     }
 
     @GetMapping("/garage/{garageId}")
-    public List<ServiceEntry> getByGarageAndOdometer(
+    public List<ServiceEntry> getByGarage(
             @PathVariable Long garageId,
             @RequestParam int minOdometer) {
 
