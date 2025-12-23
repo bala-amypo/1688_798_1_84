@@ -18,13 +18,21 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Vehicle createVehicle(Vehicle vehicle) {
+        if (vehicleRepository.existsByVin(vehicle.getVin())) {
+            throw new RuntimeException("Vehicle with this VIN already exists");
+        }
         vehicle.setActive(true);
         return vehicleRepository.save(vehicle);
     }
 
     @Override
+    public Vehicle getVehicleById(Long id) {
+        return vehicleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
+    }
+
+    @Override
     public List<Vehicle> getVehiclesByOwner(Long ownerId) {
-        // ✅ FIXED METHOD NAME
         return vehicleRepository.findByOwner_Id(ownerId);
     }
 
