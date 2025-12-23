@@ -1,3 +1,9 @@
+package com.example.demo.model;
+
+import jakarta.persistence.*;
+import java.util.*;
+
+
 @Entity
 @Table(name = "garages")
 public class Garage {

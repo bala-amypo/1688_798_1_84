@@ -1,3 +1,9 @@
+package com.example.demo.model;
+
+import jakarta.persistence.*;
+
+
+
 @Entity
 @Table(name = "service_entries")
 public class ServiceEntry {
@@ -33,3 +39,5 @@ public class ServiceEntry {
         this.garage = garage;
     }
 }
+
+
