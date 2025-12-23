@@ -4,22 +4,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "garages", uniqueConstraints = @UniqueConstraint(columnNames = "garageName"))
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Garage {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String garageName;
+    private String email;
 
-    private String address;
-    private String contactNumber;
-
-    private Boolean active = true;
+    private String password;
+    private String role;
 }
