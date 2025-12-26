@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AuthRequestDto;
 import com.example.demo.security.JwtTokenProvider;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +16,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody AuthRequestDto dto) {
-        return jwtTokenProvider.generateToken(dto.getUsername(), "USER", 1L);
+    public ResponseEntity<String> login(@RequestBody AuthRequestDto request) {
+
+        // Dummy authentication (replace with DB/user-service later)
+        if ("admin".equals(request.getUsername()) &&
+            "password".equals(request.getPassword())) {
+
+            String token = jwtTokenProvider.generateToken(request.getUsername());
+            return ResponseEntity.ok(token);
+        }
+
+        return ResponseEntity.status(401).body("Invalid credentials");
     }
 }
