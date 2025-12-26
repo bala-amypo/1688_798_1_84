@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
-import com.example.demo.service.impl.VehicleServiceImpl;
+import com.example.demo.service.VehicleService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,34 +12,35 @@ import java.util.List;
 @RequestMapping("/api/vehicles")
 public class VehicleController {
 
-    private final VehicleServiceImpl vehicleService;
+    private final VehicleService vehicleService;
 
-    public VehicleController(VehicleServiceImpl vehicleService) {
+    public VehicleController(VehicleService vehicleService) {
         this.vehicleService = vehicleService;
     }
 
     @PostMapping
-    public Vehicle create(@RequestBody Vehicle vehicle) {
-        return vehicleService.createVehicle(vehicle);
+    public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
+        return new ResponseEntity<>(vehicleService.createVehicle(vehicle), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public Vehicle getById(@PathVariable Long id) {
-        return vehicleService.getVehicleById(id);
+    public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
+        return ResponseEntity.ok(vehicleService.getVehicleById(id));
     }
 
     @GetMapping("/vin/{vin}")
-    public Vehicle getByVin(@PathVariable String vin) {
-        return vehicleService.getVehicleByVin(vin);
+    public ResponseEntity<Vehicle> getVehicleByVin(@PathVariable String vin) {
+        return ResponseEntity.ok(vehicleService.getVehicleByVin(vin));
     }
 
     @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
-        return vehicleService.getVehiclesByOwner(ownerId);
+    public ResponseEntity<List<Vehicle>> getVehiclesByOwner(@PathVariable Long ownerId) {
+        return ResponseEntity.ok(vehicleService.getVehiclesByOwner(ownerId));
     }
 
-    @DeleteMapping("/{id}")
-    public void deactivate(@PathVariable Long id) {
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivateVehicle(@PathVariable Long id) {
         vehicleService.deactivateVehicle(id);
+        return ResponseEntity.noContent().build();
     }
 }

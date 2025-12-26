@@ -1,21 +1,23 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Garage;
-import com.example.demo.service.impl.GarageServiceImpl;
+import com.example.demo.service.GarageService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/garages")
 public class GarageController {
 
-    private final GarageServiceImpl garageService;
+    private final GarageService garageService;
 
-    public GarageController(GarageServiceImpl garageService) {
+    public GarageController(GarageService garageService) {
         this.garageService = garageService;
     }
 
     @PostMapping
-    public Garage create(@RequestBody Garage garage) {
-        return garageService.createGarage(garage);
+    public ResponseEntity<Garage> createGarage(@RequestBody Garage garage) {
+        return new ResponseEntity<>(garageService.createGarage(garage), HttpStatus.CREATED);
     }
 }
