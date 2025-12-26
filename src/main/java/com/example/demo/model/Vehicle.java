@@ -15,6 +15,8 @@ public class Vehicle {
 
     private String model;
 
+    private Long ownerId;   // ✅ ADD THIS
+
     private boolean active = true;
 
     // getters & setters
@@ -29,6 +31,9 @@ public class Vehicle {
 
     public String getModel() { return model; }
     public void setModel(String model) { this.model = model; }
+
+    public Long getOwnerId() { return ownerId; }
+    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
 
     public boolean getActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
