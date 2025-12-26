@@ -2,8 +2,11 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.Garage;
 import com.example.demo.repository.GarageRepository;
+import com.example.demo.service.GarageService;
+import org.springframework.stereotype.Service;
 
-public class GarageServiceImpl {
+@Service
+public class GarageServiceImpl implements GarageService {
 
     private final GarageRepository garageRepository;
 
@@ -11,11 +14,12 @@ public class GarageServiceImpl {
         this.garageRepository = garageRepository;
     }
 
+    @Override
     public Garage createGarage(Garage garage) {
-        garageRepository.findByGarageName(garage.getGarageName())
-                .ifPresent(g -> {
-                    throw new IllegalArgumentException("Garage already exists");
-                });
+        if (garageRepository.findByGarageName(garage.getGarageName()).isPresent()) {
+            throw new IllegalArgumentException("Garage already exists");
+        }
+        garage.setActive(true);
         return garageRepository.save(garage);
     }
 }

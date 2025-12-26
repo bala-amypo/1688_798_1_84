@@ -6,11 +6,15 @@ import com.example.demo.model.Vehicle;
 import com.example.demo.repository.GarageRepository;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VehicleRepository;
+import com.example.demo.service.ServiceEntryService;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class ServiceEntryServiceImpl {
+@Service
+public class ServiceEntryServiceImpl implements ServiceEntryService {
 
     private final ServiceEntryRepository serviceEntryRepository;
     private final VehicleRepository vehicleRepository;
@@ -24,24 +28,25 @@ public class ServiceEntryServiceImpl {
         this.garageRepository = garageRepository;
     }
 
+    @Override
     public ServiceEntry createServiceEntry(ServiceEntry entry) {
 
         Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
-        Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
-
-        if (!Boolean.TRUE.equals(vehicle.getActive())) {
+        if (!vehicle.getActive()) {
             throw new IllegalArgumentException("Only active vehicles allowed");
         }
 
-        if (!Boolean.TRUE.equals(garage.getActive())) {
-            throw new IllegalArgumentException("Only active garages allowed");
+        Garage garage = garageRepository.findById(entry.getGarage().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Garage not found"));
+
+        if (!garage.getActive()) {
+            throw new IllegalArgumentException("Garage inactive");
         }
 
         if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Service date cannot be in the future");
+            throw new IllegalArgumentException("Service date cannot be future");
         }
 
         serviceEntryRepository
@@ -55,6 +60,7 @@ public class ServiceEntryServiceImpl {
         return serviceEntryRepository.save(entry);
     }
 
+    @Override
     public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
         return serviceEntryRepository.findByVehicleId(vehicleId);
     }
