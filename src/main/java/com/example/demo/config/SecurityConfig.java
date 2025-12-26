@@ -1,5 +1,7 @@
 package com.example.demo.config;
 
+import com.example.demo.security.JwtAuthenticationEntryPoint;
+import com.example.demo.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,16 +29,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // Disable CSRF (JWT based)
+            // Disable CSRF (JWT based APIs)
             .csrf(csrf -> csrf.disable())
 
-            // Exception handling
-            .exceptionHandling(ex -> 
+            // Exception handling (401 handling)
+            .exceptionHandling(ex ->
                 ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)
             )
 
-            // Stateless session
-            .sessionManagement(session -> 
+            // Stateless session (JWT)
+            .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
@@ -51,7 +53,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             );
 
-        // Add JWT filter
+        // Add JWT filter before Spring Security filter
         http.addFilterBefore(
             jwtAuthenticationFilter,
             UsernamePasswordAuthenticationFilter.class
