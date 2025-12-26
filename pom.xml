@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="
-           http://maven.apache.org/POM/4.0.0
-           http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>com.example</groupId>
-    <artifactId>vehicle-service-history</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <name>vehicle-service-history</name>
-    <description>Vehicle Service History Application</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -22,10 +13,18 @@
         <relativePath/>
     </parent>
 
+    <groupId>com.example</groupId>
+    <artifactId>vehicle-service-history</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>vehicle-service-history</name>
+    <description>Vehicle Service History Application</description>
+
     <properties>
         <java.version>17</java.version>
         <springdoc.version>2.5.0</springdoc.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <testng.version>7.9.0</testng.version>
+        <mockito.version>5.11.0</mockito.version>
     </properties>
 
     <dependencies>
@@ -69,11 +68,20 @@
             <version>${springdoc.version}</version>
         </dependency>
 
+        <!-- Lombok (optional but recommended) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- ================= TEST DEPENDENCIES ================= -->
+
         <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.9.0</version>
+            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -81,39 +89,25 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.11.0</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-testng</artifactId>
-            <version>0.5.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Spring Test Utilities -->
+        <!-- Spring Boot Test (JUnit excluded) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>org.junit.jupiter</groupId>
                     <artifactId>junit-jupiter</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
             </exclusions>
-        </dependency>
-
-        <!-- Servlet API -->
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>
@@ -121,13 +115,13 @@
     <build>
         <plugins>
 
-            <!-- Spring Boot Maven Plugin -->
+            <!-- Spring Boot Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- Maven Surefire Plugin for TestNG -->
+            <!-- Maven Surefire for TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
