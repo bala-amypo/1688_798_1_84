@@ -3,34 +3,50 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "vehicles")
 public class Vehicle {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String vin;
-    private String make;
-    private String model;
+
+    @Column(nullable = false)
     private Long ownerId;
-    private Boolean active = true;
 
-    // getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @Column(nullable = false)
+    private Boolean active;
 
-    public String getVin() { return vin; }
-    public void setVin(String vin) { this.vin = vin; }
+    public Vehicle() {
+    }
 
-    public String getMake() { return make; }
-    public void setMake(String make) { this.make = make; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getModel() { return model; }
-    public void setModel(String model) { this.model = model; }
+    public String getVin() {
+        return vin;
+    }
 
-    public Long getOwnerId() { return ownerId; }
-    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }

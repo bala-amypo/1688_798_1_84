@@ -3,25 +3,39 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "garages")
 public class Garage {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String garageName;
-    private String address;
-    private Boolean active = true;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @Column(nullable = false)
+    private Boolean active;
 
-    public String getGarageName() { return garageName; }
-    public void setGarageName(String garageName) { this.garageName = garageName; }
+    public Garage() {
+    }
 
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public Long getId() {
+        return id;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public String getGarageName() {
+        return garageName;
+    }
+
+    public void setGarageName(String garageName) {
+        this.garageName = garageName;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }
