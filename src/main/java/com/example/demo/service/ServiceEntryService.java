@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ServiceEntryService {
 
-    ServiceEntry save(ServiceEntry serviceEntry);
+    ServiceEntry createServiceEntry(ServiceEntry entry);
 
-    List<ServiceEntry> getByGarageAndMinOdometer(Long garageId, int minOdometer);
+    List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
 }

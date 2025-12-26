@@ -4,12 +4,8 @@ import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.ServicePart;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.ServicePartRepository;
-import com.example.demo.service.ServicePartService;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.stereotype.Service;
 
-@Service
-public class ServicePartServiceImpl implements ServicePartService {
+public class ServicePartServiceImpl {
 
     private final ServicePartRepository servicePartRepository;
     private final ServiceEntryRepository serviceEntryRepository;
@@ -20,12 +16,11 @@ public class ServicePartServiceImpl implements ServicePartService {
         this.serviceEntryRepository = serviceEntryRepository;
     }
 
-    @Override
     public ServicePart createPart(ServicePart part) {
 
         ServiceEntry entry = serviceEntryRepository.findById(
                 part.getServiceEntry().getId()
-        ).orElseThrow(() -> new EntityNotFoundException("ServiceEntry not found"));
+        ).orElseThrow(() -> new IllegalArgumentException("ServiceEntry not found"));
 
         if (part.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
