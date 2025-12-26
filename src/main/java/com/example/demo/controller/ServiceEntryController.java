@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.service.ServiceEntryService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,19 +10,19 @@ import java.util.List;
 @RequestMapping("/api/service-entries")
 public class ServiceEntryController {
 
-    private final ServiceEntryService serviceEntryService;
+    private final ServiceEntryService service;
 
-    public ServiceEntryController(ServiceEntryService serviceEntryService) {
-        this.serviceEntryService = serviceEntryService;
+    public ServiceEntryController(ServiceEntryService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<ServiceEntry> createServiceEntry(@RequestBody ServiceEntry entry) {
-        return new ResponseEntity<>(serviceEntryService.createServiceEntry(entry), HttpStatus.CREATED);
+    public ServiceEntry create(@RequestBody ServiceEntry e) {
+        return service.createServiceEntry(e);
     }
 
-    @GetMapping("/vehicle/{vehicleId}")
-    public ResponseEntity<List<ServiceEntry>> getEntriesForVehicle(@PathVariable Long vehicleId) {
-        return ResponseEntity.ok(serviceEntryService.getEntriesForVehicle(vehicleId));
+    @GetMapping("/vehicle/{id}")
+    public List<ServiceEntry> get(@PathVariable Long id) {
+        return service.getEntriesForVehicle(id);
     }
 }

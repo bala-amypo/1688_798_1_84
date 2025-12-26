@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
 import com.example.demo.service.VehicleService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,35 +10,24 @@ import java.util.List;
 @RequestMapping("/api/vehicles")
 public class VehicleController {
 
-    private final VehicleService vehicleService;
+    private final VehicleService service;
 
-    public VehicleController(VehicleService vehicleService) {
-        this.vehicleService = vehicleService;
+    public VehicleController(VehicleService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
-        return new ResponseEntity<>(vehicleService.createVehicle(vehicle), HttpStatus.CREATED);
+    public Vehicle create(@RequestBody Vehicle v) {
+        return service.createVehicle(v);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vehicle> getVehicleById(@PathVariable Long id) {
-        return ResponseEntity.ok(vehicleService.getVehicleById(id));
-    }
-
-    @GetMapping("/vin/{vin}")
-    public ResponseEntity<Vehicle> getVehicleByVin(@PathVariable String vin) {
-        return ResponseEntity.ok(vehicleService.getVehicleByVin(vin));
+    public Vehicle get(@PathVariable Long id) {
+        return service.getVehicleById(id);
     }
 
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<Vehicle>> getVehiclesByOwner(@PathVariable Long ownerId) {
-        return ResponseEntity.ok(vehicleService.getVehiclesByOwner(ownerId));
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivateVehicle(@PathVariable Long id) {
-        vehicleService.deactivateVehicle(id);
-        return ResponseEntity.noContent().build();
+    public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
+        return service.getVehiclesByOwner(ownerId);
     }
 }
