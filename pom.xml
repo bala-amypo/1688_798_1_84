@@ -15,7 +15,6 @@
     <name>vehicle-service-history</name>
     <description>Vehicle Service History Application</description>
 
-    <!-- ✅ Spring Boot 3 -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -31,46 +30,46 @@
 
     <dependencies>
 
-        <!-- 🌱 Spring Web -->
+        <!-- Spring Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- 🔐 Spring Security -->
+        <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- 🗄️ JPA / Hibernate -->
+        <!-- Spring Data JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- 🛢️ H2 Database (for dev & tests) -->
+        <!-- H2 Database -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- 🔑 JWT -->
+        <!-- JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
         </dependency>
 
-        <!-- 📘 OpenAPI / Swagger -->
+        <!-- OpenAPI / Swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
 
-        <!-- 🧪 TestNG -->
+        <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -78,7 +77,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- 🧪 Mockito -->
+        <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -93,7 +92,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- 🧪 Spring Test Utilities -->
+        <!-- Spring Test Utilities -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -110,7 +109,7 @@
             </exclusions>
         </dependency>
 
-        <!-- 🔧 Servlet API (for your servlet tests) -->
+        <!-- Servlet API -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -122,13 +121,13 @@
     <build>
         <plugins>
 
-            <!-- 🚀 Spring Boot Plugin -->
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- 🧪 Maven Surefire (TestNG support) -->
+            <!-- Maven Surefire Plugin for TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
