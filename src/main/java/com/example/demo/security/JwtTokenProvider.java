@@ -1,45 +1,38 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
 
-    private static final String SECRET_KEY = "MySecretKeyForJwtGeneration12345";
-    private static final long JWT_EXPIRATION = 24 * 60 * 60 * 1000; // 1 day
+    private final Key key = Keys.hmacShaKeyFor(
+            "mysecretkeymysecretkeymysecretkey".getBytes()
+    );
 
-    public String generateToken(String username) {
+    private final long jwtExpirationMs = 86400000;
+
+    // REQUIRED BY TESTS
+    public String generateToken(String username, String role, Long userId) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
+        Date expiry = new Date(now.getTime() + jwtExpirationMs);
 
         return Jwts.builder()
                 .setSubject(username)
+                .claim("role", role)
+                .claim("userId", userId)
                 .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setExpiration(expiry)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String getUsernameFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser()
-                    .setSigningKey(SECRET_KEY)
-                    .parseClaimsJws(token);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
+    // Keep this if used elsewhere
+    public String generateToken(String username) {
+        return generateToken(username, "USER", 0L);
     }
 }
