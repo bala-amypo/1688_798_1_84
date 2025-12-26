@@ -3,40 +3,27 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "service_parts")
 public class ServicePart {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "service_entry_id")
     private ServiceEntry serviceEntry;
 
     private String partName;
-    private Integer quantity;
+    private int quantity;
 
-    public ServicePart() {
-    }
-
-    public ServicePart(ServiceEntry serviceEntry, String partName, Integer quantity) {
-        this.serviceEntry = serviceEntry;
-        this.partName = partName;
-        this.quantity = quantity;
-    }
-
-    // Getters and Setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public ServiceEntry getServiceEntry() { return serviceEntry; }
-    public void setServiceEntry(ServiceEntry serviceEntry) {
-        this.serviceEntry = serviceEntry;
-    }
+    public void setServiceEntry(ServiceEntry serviceEntry) { this.serviceEntry = serviceEntry; }
 
     public String getPartName() { return partName; }
     public void setPartName(String partName) { this.partName = partName; }
 
-    public Integer getQuantity() { return quantity; }
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 }

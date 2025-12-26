@@ -3,65 +3,34 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "vehicles")
 public class Vehicle {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String vin;
-
-    @Column(nullable = false)
+    private String make;
     private String model;
+    private Long ownerId;
+    private Boolean active = true;
 
-    @Column(nullable = false)
-    private boolean active = true;
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
+    public String getVin() { return vin; }
+    public void setVin(String vin) { this.vin = vin; }
 
-    // ---------- Getters & Setters ----------
+    public String getMake() { return make; }
+    public void setMake(String make) { this.make = make; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getModel() { return model; }
+    public void setModel(String model) { this.model = model; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getOwnerId() { return ownerId; }
+    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
 
-    public String getVin() {          // ✅ REQUIRED
-        return vin;
-    }
-
-    public void setVin(String vin) {
-        this.vin = vin;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public boolean isActive() {        // ✅ BOOLEAN GETTER
-        return active;
-    }
-
-    public void setActive(boolean active) {   // ✅ REQUIRED
-        this.active = active;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }
