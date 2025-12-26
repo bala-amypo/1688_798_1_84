@@ -10,13 +10,14 @@ public class Vehicle {
     private Long id;
 
     private String vin;
+
     private String make;
+
     private String model;
-    private Long ownerId;
-    private boolean active;
 
-    public Vehicle() {}
+    private boolean active = true;
 
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -29,9 +30,6 @@ public class Vehicle {
     public String getModel() { return model; }
     public void setModel(String model) { this.model = model; }
 
-    public Long getOwnerId() { return ownerId; }
-    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
-
-    public boolean isActive() { return active; }
+    public boolean getActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 }
