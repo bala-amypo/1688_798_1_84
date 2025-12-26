@@ -1,21 +1,23 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.VerificationLog;
-import com.example.demo.service.impl.VerificationLogServiceImpl;
+import com.example.demo.service.VerificationLogService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/verification-logs")
 public class VerificationLogController {
 
-    private final VerificationLogServiceImpl verificationLogService;
+    private final VerificationLogService verificationLogService;
 
-    public VerificationLogController(VerificationLogServiceImpl verificationLogService) {
+    public VerificationLogController(VerificationLogService verificationLogService) {
         this.verificationLogService = verificationLogService;
     }
 
     @PostMapping
-    public VerificationLog create(@RequestBody VerificationLog log) {
-        return verificationLogService.createLog(log);
+    public ResponseEntity<VerificationLog> createLog(@RequestBody VerificationLog log) {
+        return new ResponseEntity<>(verificationLogService.createLog(log), HttpStatus.CREATED);
     }
 }
