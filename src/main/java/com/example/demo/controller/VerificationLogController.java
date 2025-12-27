@@ -2,20 +2,20 @@ package com.example.demo.controller;
 
 import com.example.demo.model.VerificationLog;
 import com.example.demo.service.VerificationLogService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/logs")
+@RequestMapping("/api/verification-logs")
 public class VerificationLogController {
 
-    private final VerificationLogService service;
-
-    public VerificationLogController(VerificationLogService service) {
-        this.service = service;
-    }
+    @Autowired
+    private VerificationLogService verificationLogService;
 
     @PostMapping
-    public VerificationLog create(@RequestBody VerificationLog log) {
-        return service.createLog(log);
+    public ResponseEntity<VerificationLog> createVerificationLog(@RequestBody VerificationLog verificationLog) {
+        VerificationLog savedLog = verificationLogService.createLog(verificationLog);
+        return ResponseEntity.ok(savedLog);
     }
 }
