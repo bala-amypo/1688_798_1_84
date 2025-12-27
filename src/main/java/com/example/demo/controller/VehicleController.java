@@ -17,9 +17,11 @@ public class VehicleController {
     }
 
     @PostMapping
-    public Vehicle create(@RequestBody Vehicle v) {
-        return service.createVehicle(v);
+    public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
+    Vehicle saved = vehicleService.saveVehicle(vehicle);
+    return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
+
 
     @GetMapping("/{id}")
     public Vehicle get(@PathVariable Long id) {
