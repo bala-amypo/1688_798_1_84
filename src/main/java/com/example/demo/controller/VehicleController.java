@@ -2,32 +2,39 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Vehicle;
 import com.example.demo.service.VehicleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicles")
 public class VehicleController {
 
-    private final VehicleService service;
-
-    public VehicleController(VehicleService service) {
-        this.service = service;
-    }
+    @Autowired
+    private VehicleService vehicleService;
 
     @PostMapping
-    public Vehicle create(@RequestBody Vehicle v) {
-        return service.createVehicle(v);
+    public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
+        Vehicle savedVehicle = vehicleService.createVehicle(vehicle);
+        return ResponseEntity.ok(savedVehicle);
     }
 
     @GetMapping("/{id}")
-    public Vehicle get(@PathVariable Long id) {
-        return service.getVehicleById(id);
+    public ResponseEntity<Vehicle> getVehicle(@PathVariable Long id) {
+        Vehicle vehicle = vehicleService.getVehicleById(id);
+        return ResponseEntity.ok(vehicle);
     }
 
     @GetMapping("/owner/{ownerId}")
-    public List<Vehicle> getByOwner(@PathVariable Long ownerId) {
-        return service.getVehiclesByOwner(ownerId);
+    public ResponseEntity<List<Vehicle>> getVehiclesByOwner(@PathVariable Long ownerId) {
+        List<Vehicle> vehicles = vehicleService.getVehiclesByOwner(ownerId);
+        return ResponseEntity.ok(vehicles);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deactivateVehicle(@PathVariable Long id) {
+        vehicleService.deactivateVehicle(id);
+        return ResponseEntity.ok().build();
     }
 }

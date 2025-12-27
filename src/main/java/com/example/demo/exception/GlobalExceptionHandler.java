@@ -1,46 +1,30 @@
 package com.example.demo.exception;
 
+import com.example.demo.dto.ApiErrorResponse;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) {
-        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleEntityNotFound(EntityNotFoundException ex) {
+        ApiErrorResponse error = new ApiErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        ApiErrorResponse error = new ApiErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicate(DuplicateResourceException ex) {
-        return buildResponse(HttpStatus.CONFLICT, ex.getMessage());
-    }
-
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException ex) {
-        return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
-    }
-
-    private ResponseEntity<ErrorResponse> buildResponse(HttpStatus status, String message) {
-        ErrorResponse error = new ErrorResponse(
-                LocalDateTime.now(),
-                status.value(),
-                message
-        );
-        return new ResponseEntity<>(error, status);
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiErrorResponse> handleValidation(ValidationException ex) {
+        ApiErrorResponse error = new ApiErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }
