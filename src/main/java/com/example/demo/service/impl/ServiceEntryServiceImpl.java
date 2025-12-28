@@ -57,50 +57,50 @@
 
 package com.example.demo.service.impl;
 
-import com.example.demo.model.ServiceEntry;
-import com.example.demo.model.Vehicle;
+import com.example.demo.entity.ServiceEntry;
 import com.example.demo.repository.ServiceEntryRepository;
-import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
 
     private final ServiceEntryRepository serviceEntryRepository;
-    private final VehicleRepository vehicleRepository;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
-                                   VehicleRepository vehicleRepository) {
+    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository) {
         this.serviceEntryRepository = serviceEntryRepository;
-        this.vehicleRepository = vehicleRepository;
     }
 
-    @Override
-    public ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry) {
-        Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> new RuntimeException("Vehicle not found"));
-
-        serviceEntry.setVehicle(vehicle);
-        return serviceEntryRepository.save(serviceEntry);
-    }
-
-    // REQUIRED BY TESTS
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry serviceEntry) {
         return serviceEntryRepository.save(serviceEntry);
     }
 
     @Override
-    public ServiceEntry getServiceEntryById(Long id) {
-        return serviceEntryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ServiceEntry not found"));
+    public List<ServiceEntry> getAllServiceEntries() {
+        return serviceEntryRepository.findAll();
     }
 
     @Override
-    public List<ServiceEntry> getAllServiceEntries() {
-        return serviceEntryRepository.findAll();
+    public Optional<ServiceEntry> getServiceEntryById(Long id) {
+        return serviceEntryRepository.findById(id);
+    }
+
+    @Override
+    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
+        return serviceEntryRepository.findByVehicleId(vehicleId);
+    }
+
+    @Override
+    public Optional<ServiceEntry> getLatestServiceEntry(Long vehicleId) {
+        return serviceEntryRepository.findTopByVehicleIdOrderByServiceDateDesc(vehicleId);
+    }
+
+    @Override
+    public void deleteServiceEntry(Long id) {
+        serviceEntryRepository.deleteById(id);
     }
 }

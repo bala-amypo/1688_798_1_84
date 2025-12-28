@@ -10,18 +10,22 @@
 
 package com.example.demo.service;
 
-import com.example.demo.model.ServiceEntry;
+import com.example.demo.entity.ServiceEntry;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ServiceEntryService {
 
-    ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry);
-
-    // Required by tests
     ServiceEntry createServiceEntry(ServiceEntry serviceEntry);
 
-    ServiceEntry getServiceEntryById(Long id);
-
     List<ServiceEntry> getAllServiceEntries();
+
+    Optional<ServiceEntry> getServiceEntryById(Long id);
+
+    List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
+
+    Optional<ServiceEntry> getLatestServiceEntry(Long vehicleId);
+
+    void deleteServiceEntry(Long id);
 }
