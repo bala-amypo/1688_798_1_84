@@ -48,7 +48,7 @@
 
 package com.example.demo.entity;
 
-import jakarta.persistence.*; // or javax.persistence.* based on your setup
+import jakarta.persistence.*;  // or javax.persistence if using that
 import java.time.LocalDate;
 
 @Entity
@@ -65,36 +65,11 @@ public class ServiceEntry {
 
     private String description;
 
-    // getters and setters
-    public Long getId() {
-        return id;
-    }
+    // other fields, getters, setters, constructors
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public ServiceEntry() {}
 
-    public Long getVehicleId() {
-        return vehicleId;
-    }
+    // Getters and setters here
 
-    public void setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
-    }
-
-    public LocalDate getServiceDate() {
-        return serviceDate;
-    }
-
-    public void setServiceDate(LocalDate serviceDate) {
-        this.serviceDate = serviceDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    // equals, hashCode, toString if needed
 }
