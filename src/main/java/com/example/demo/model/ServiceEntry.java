@@ -50,6 +50,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "service_entries")
@@ -59,73 +60,16 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private Long vehicleId;
 
-    @Column(nullable = false)
-    private String serviceType;
+    private LocalDate serviceDate;
 
     private String description;
 
-    @Column(nullable = false)
-    private LocalDate serviceDate;
+    private Double cost;
 
-    private Integer mileage;
+    @OneToMany(mappedBy = "serviceEntry", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ServicePart> serviceParts;
 
-    // ===== Constructors =====
-    public ServiceEntry() {}
-
-    public ServiceEntry(Long vehicleId, String serviceType, String description,
-                        LocalDate serviceDate, Integer mileage) {
-        this.vehicleId = vehicleId;
-        this.serviceType = serviceType;
-        this.description = description;
-        this.serviceDate = serviceDate;
-        this.mileage = mileage;
-    }
-
-    // ===== Getters & Setters =====
-    public Long getId() {
-        return id;
-    }
-
-    public Long getVehicleId() {
-        return vehicleId;
-    }
-
-    public void setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
-    }
-
-    public String getServiceType() {
-        return serviceType;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getServiceDate() {
-        return serviceDate;
-    }
-
-    public void setServiceDate(LocalDate serviceDate) {
-        this.serviceDate = serviceDate;
-    }
-
-    public Integer getMileage() {
-        return mileage;
-    }
-
-    public void setMileage(Integer mileage) {
-        this.mileage = mileage;
-    }
+    // getters & setters
 }
