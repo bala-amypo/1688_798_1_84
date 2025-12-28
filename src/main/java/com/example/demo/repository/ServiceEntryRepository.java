@@ -25,17 +25,44 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.ServiceEntry;
-import com.example.demo.model.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long> {
 
-    // ✅ REQUIRED BY ServiceEntryServiceImpl
-    Optional<ServiceEntry> findTopByVehicleOrderByOdometerReadingDesc(Vehicle vehicle);
-
-    // ✅ REQUIRED BY ServiceEntryServiceImpl
+    // already added earlier
     List<ServiceEntry> findByVehicleId(Long vehicleId);
+
+    // already added earlier
+    java.util.Optional<ServiceEntry>
+        findTopByVehicleOrderByOdometerReadingDesc(
+            com.example.demo.model.Vehicle vehicle);
+
+    // ✅ REQUIRED BY TESTS
+    @Query("""
+        SELECT s FROM ServiceEntry s
+        WHERE s.garage.id = :garageId
+          AND s.odometerReading >= :minOdometer
+    """)
+    List<ServiceEntry> findByGarageAndMinOdometer(
+            @Param("garageId") long garageId,
+            @Param("minOdometer") int minOdometer
+    );
+
+    // ✅ REQUIRED BY TESTS
+    @Query("""
+        SELECT s FROM ServiceEntry s
+        WHERE s.vehicle.id = :vehicleId
+          AND s.serviceDate BETWEEN :startDate AND :endDate
+    """)
+    List<ServiceEntry> findByVehicleAndDateRange(
+            @Param("vehicleId") long vehicleId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 }
+
