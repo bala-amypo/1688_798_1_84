@@ -65,6 +65,7 @@ import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -79,58 +80,66 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         this.vehicleRepository = vehicleRepository;
     }
 
+    /**
+     * ✅ REQUIRED BY TEST CASES
+     * This method is directly called in VehicleServiceHistoryApplicationTests
+     */
     @Override
-    public ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry) {
+    public ServiceEntry createServiceEntry(ServiceEntry serviceEntry) {
+        if (serviceEntry.getVehicle() == null || serviceEntry.getVehicle().getId() == null) {
+            throw new IllegalArgumentException("Vehicle information is required");
+        }
+
+        Long vehicleId = serviceEntry.getVehicle().getId();
 
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Vehicle not found with id: " + vehicleId));
+
+        serviceEntry.setVehicle(vehicle);
+        return serviceEntryRepository.save(serviceEntry);
+    }
+
+    /**
+     * ✅ OPTIONAL API METHOD (SAFE TO KEEP)
+     */
+    @Override
+    public ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Vehicle not found with id: " + vehicleId));
 
         serviceEntry.setVehicle(vehicle);
         return serviceEntryRepository.save(serviceEntry);
     }
 
     @Override
-    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
-
-        if (!vehicleRepository.existsById(vehicleId)) {
-            throw new ResourceNotFoundException("Vehicle not found with id: " + vehicleId);
-        }
-
-        return serviceEntryRepository.findByVehicleId(vehicleId);
-    }
-
-    @Override
-    public ServiceEntry getLatestServiceEntry(Long vehicleId) {
-
-        Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
-
-        return serviceEntryRepository
-                .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "No service entries found for vehicle id: " + vehicleId));
+    public List<ServiceEntry> getAllServiceEntries() {
+        return serviceEntryRepository.findAll();
     }
 
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
-
         return serviceEntryRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "ServiceEntry not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "ServiceEntry not found with id: " + id));
     }
 
     @Override
     public void deleteServiceEntry(Long id) {
-
-        ServiceEntry entry = serviceEntryRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "ServiceEntry not found with id: " + id));
-
+        ServiceEntry entry = getServiceEntryById(id);
         serviceEntryRepository.delete(entry);
+    }
+
+    @Override
+    public List<ServiceEntry> getServiceEntriesByVehicle(Long vehicleId) {
+        return serviceEntryRepository.findByVehicleId(vehicleId);
+    }
+
+    @Override
+    public List<ServiceEntry> getServiceEntriesByDateRange(
+            Long vehicleId, LocalDate startDate, LocalDate endDate) {
+        return serviceEntryRepository
+                .findByVehicleIdAndServiceDateBetween(vehicleId, startDate, endDate);
     }
 }
