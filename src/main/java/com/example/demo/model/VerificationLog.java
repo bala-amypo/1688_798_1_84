@@ -1,28 +1,28 @@
-package com.example.demo.model;
+// package com.example.demo.model;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+// import jakarta.persistence.*;
+// import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "verification_logs")
-public class VerificationLog {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+// @Entity
+// @Table(name = "verification_logs")
+// public class VerificationLog {
+//     @Id
+//     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//     private Long id;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_entry_id", nullable = false)
-    private ServiceEntry serviceEntry;
+//     @ManyToOne(fetch = FetchType.LAZY)
+//     @JoinColumn(name = "service_entry_id", nullable = false)
+//     private ServiceEntry serviceEntry;
     
-    @Column(nullable = false)
-    private LocalDateTime verifiedAt;
+//     @Column(nullable = false)
+//     private LocalDateTime verifiedAt;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+//     public Long getId() { return id; }
+//     public void setId(Long id) { this.id = id; }
     
-    public ServiceEntry getServiceEntry() { return serviceEntry; }
-    public void setServiceEntry(ServiceEntry serviceEntry) { this.serviceEntry = serviceEntry; }
+//     public ServiceEntry getServiceEntry() { return serviceEntry; }
+//     public void setServiceEntry(ServiceEntry serviceEntry) { this.serviceEntry = serviceEntry; }
     
-    public LocalDateTime getVerifiedAt() { return verifiedAt; }
-    public void setVerifiedAt(LocalDateTime verifiedAt) { this.verifiedAt = verifiedAt; }
-}
+//     public LocalDateTime getVerifiedAt() { return verifiedAt; }
+//     public void setVerifiedAt(LocalDateTime verifiedAt) { this.verifiedAt = verifiedAt; }
+// }
