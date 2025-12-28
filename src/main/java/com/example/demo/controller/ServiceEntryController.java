@@ -29,72 +29,46 @@
 
 package com.example.demo.controller;
 
-import com.example.demo.model.ServiceEntry;
+import com.example.demo.entity.ServiceEntry;
 import com.example.demo.service.ServiceEntryService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vehicles/{vehicleId}/services")
+@RequestMapping("/api/service-entries")
 public class ServiceEntryController {
 
-    private final ServiceEntryService serviceEntryService;
+    private final ServiceEntryService service;
 
-    public ServiceEntryController(ServiceEntryService serviceEntryService) {
-        this.serviceEntryService = serviceEntryService;
+    public ServiceEntryController(ServiceEntryService service) {
+        this.service = service;
     }
 
-    // ✅ CREATE service entry (FIXED)
     @PostMapping
-    public ResponseEntity<ServiceEntry> createServiceEntry(
-            @PathVariable Long vehicleId,
-            @RequestBody ServiceEntry serviceEntry) {
-
-        ServiceEntry created =
-                serviceEntryService.createServiceEntry(vehicleId, serviceEntry);
-
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public ResponseEntity<ServiceEntry> create(@RequestBody ServiceEntry entry) {
+        return ResponseEntity.ok(service.createServiceEntry(entry));
     }
 
-    // ✅ GET all service entries for a vehicle
-    @GetMapping
-    public ResponseEntity<List<ServiceEntry>> getEntriesForVehicle(
-            @PathVariable Long vehicleId) {
-
-        return ResponseEntity.ok(
-                serviceEntryService.getEntriesForVehicle(vehicleId)
-        );
-    }
-
-    // ✅ GET latest service entry
-    @GetMapping("/latest")
-    public ResponseEntity<ServiceEntry> getLatestServiceEntry(
-            @PathVariable Long vehicleId) {
-
-        return ResponseEntity.ok(
-                serviceEntryService.getLatestServiceEntry(vehicleId)
-        );
-    }
-
-    // ✅ GET service entry by id
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceEntry> getServiceEntryById(
-            @PathVariable Long id) {
-
-        return ResponseEntity.ok(
-                serviceEntryService.getServiceEntryById(id)
-        );
+    public ResponseEntity<ServiceEntry> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getServiceEntryById(id));
     }
 
-    // ✅ DELETE service entry
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteServiceEntry(
-            @PathVariable Long id) {
+    @GetMapping("/vehicle/{vehicleId}")
+    public ResponseEntity<List<ServiceEntry>> getByVehicle(@PathVariable Long vehicleId) {
+        return ResponseEntity.ok(service.getEntriesForVehicle(vehicleId));
+    }
 
-        serviceEntryService.deleteServiceEntry(id);
+    @GetMapping("/vehicle/{vehicleId}/latest")
+    public ResponseEntity<ServiceEntry> getLatest(@PathVariable Long vehicleId) {
+        return ResponseEntity.ok(service.getLatestServiceEntry(vehicleId));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.deleteServiceEntry(id);
         return ResponseEntity.noContent().build();
     }
 }

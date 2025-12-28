@@ -36,3 +36,4 @@ public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long
 
     Optional<ServiceEntry> findTopByVehicleIdOrderByServiceDateDesc(Long vehicleId);
 }
+

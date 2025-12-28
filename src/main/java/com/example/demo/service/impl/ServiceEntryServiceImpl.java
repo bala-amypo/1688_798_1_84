@@ -63,44 +63,40 @@ import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
 
-    private final ServiceEntryRepository serviceEntryRepository;
+    private final ServiceEntryRepository repository;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository) {
-        this.serviceEntryRepository = serviceEntryRepository;
+    public ServiceEntryServiceImpl(ServiceEntryRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public ServiceEntry createServiceEntry(ServiceEntry serviceEntry) {
-        return serviceEntryRepository.save(serviceEntry);
+    public ServiceEntry createServiceEntry(ServiceEntry entry) {
+        return repository.save(entry);
     }
 
     @Override
-    public List<ServiceEntry> getAllServiceEntries() {
-        return serviceEntryRepository.findAll();
-    }
-
-    @Override
-    public Optional<ServiceEntry> getServiceEntryById(Long id) {
-        return serviceEntryRepository.findById(id);
+    public ServiceEntry getServiceEntryById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Service entry not found"));
     }
 
     @Override
     public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
-        return serviceEntryRepository.findByVehicleId(vehicleId);
+        return repository.findByVehicleId(vehicleId);
     }
 
     @Override
-    public Optional<ServiceEntry> getLatestServiceEntry(Long vehicleId) {
-        return serviceEntryRepository.findTopByVehicleIdOrderByServiceDateDesc(vehicleId);
+    public ServiceEntry getLatestServiceEntry(Long vehicleId) {
+        return repository.findTopByVehicleIdOrderByServiceDateDesc(vehicleId)
+                .orElseThrow(() -> new RuntimeException("No service entries found"));
     }
 
     @Override
     public void deleteServiceEntry(Long id) {
-        serviceEntryRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }
