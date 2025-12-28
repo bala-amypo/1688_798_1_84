@@ -41,8 +41,7 @@ import com.example.demo.dto.AuthResponse;
 import com.example.demo.security.JwtTokenProvider;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
-@CrossOrigin(origins= "*")
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
