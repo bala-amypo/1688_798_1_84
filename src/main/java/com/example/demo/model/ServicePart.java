@@ -34,7 +34,7 @@
 
 package com.example.demo.model; // or wherever this class resides
 
-import com.example.demo.entity.ServiceEntry;
+import com.example.demo.model.ServiceEntry;
 
 public class ServicePart {
     // your class definition that uses ServiceEntry
