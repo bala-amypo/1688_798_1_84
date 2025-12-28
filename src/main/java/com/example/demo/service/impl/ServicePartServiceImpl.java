@@ -29,11 +29,20 @@
 //     }
 // }
 
-package com.example.demo.service.impl;
+ppackage com.example.demo.service.impl;
 
-import com.example.demo.entity.ServiceEntry;
+import com.example.demo.model.ServicePart;
 import com.example.demo.service.ServicePartService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ServicePartServiceImpl implements ServicePartService {
-    // Use ServiceEntry here correctly
+
+    // other methods ...
+
+    @Override
+    public ServicePart createPart(ServicePart part) {
+        // Your save logic here, e.g. repository.save(part)
+        return part; // placeholder
+    }
 }

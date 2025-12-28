@@ -27,9 +27,18 @@
 
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.ServiceEntry;
+import com.example.demo.model.VerificationLog;
 import com.example.demo.service.VerificationLogService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class VerificationLogServiceImpl implements VerificationLogService {
-    // Use ServiceEntry here correctly
+
+    // other methods ...
+
+    @Override
+    public VerificationLog createLog(VerificationLog log) {
+        // Your save logic here, e.g. repository.save(log)
+        return log; // placeholder
+    }
 }

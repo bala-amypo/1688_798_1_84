@@ -48,9 +48,8 @@
 
 package com.example.demo.entity;
 
-import jakarta.persistence.*; // or javax.persistence based on your setup
-import java.time.LocalDateTime;
-import java.util.List;
+import jakarta.persistence.*; // or javax.persistence.* based on your setup
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "service_entries")
@@ -60,14 +59,42 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Define other fields
     private Long vehicleId;
 
-    private LocalDateTime serviceDate;
+    private LocalDate serviceDate;
 
-    // Constructor, getters and setters
+    private String description;
 
-    public ServiceEntry() {}
+    // getters and setters
+    public Long getId() {
+        return id;
+    }
 
-    // other fields, getters, setters...
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    public LocalDate getServiceDate() {
+        return serviceDate;
+    }
+
+    public void setServiceDate(LocalDate serviceDate) {
+        this.serviceDate = serviceDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
