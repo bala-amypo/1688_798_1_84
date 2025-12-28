@@ -1,8 +1,8 @@
-package com.example.demo.service;
+// package com.example.demo.service;
 
-import com.example.demo.model.AppUser;
+// import com.example.demo.model.AppUser;
 
-public interface AuthService {
-    AppUser register(AppUser user);
-    String authenticate(String email, String password);
-}
+// public interface AuthService {
+//     AppUser register(AppUser user);
+//     String authenticate(String email, String password);
+// }

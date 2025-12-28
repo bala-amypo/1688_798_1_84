@@ -1,7 +1,7 @@
-package com.example.demo.service;
+// package com.example.demo.service;
 
-import com.example.demo.model.VerificationLog;
+// import com.example.demo.model.VerificationLog;
 
-public interface VerificationLogService {
-    VerificationLog createLog(VerificationLog verificationLog);
-}
+// public interface VerificationLogService {
+//     VerificationLog createLog(VerificationLog verificationLog);
+// }
