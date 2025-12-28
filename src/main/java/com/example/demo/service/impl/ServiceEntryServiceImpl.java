@@ -57,16 +57,14 @@
 
 package com.example.demo.service.impl;
 
-import com.example.demo.model.Garage;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.ServiceEntry;
 import com.example.demo.model.Vehicle;
-import com.example.demo.repository.GarageRepository;
 import com.example.demo.repository.ServiceEntryRepository;
 import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -74,50 +72,66 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
 
     private final ServiceEntryRepository serviceEntryRepository;
     private final VehicleRepository vehicleRepository;
-    private final GarageRepository garageRepository;
 
     public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
-                                   VehicleRepository vehicleRepository,
-                                   GarageRepository garageRepository) {
+                                   VehicleRepository vehicleRepository) {
         this.serviceEntryRepository = serviceEntryRepository;
         this.vehicleRepository = vehicleRepository;
-        this.garageRepository = garageRepository;
     }
 
+    // ✅ Create service entry
     @Override
-    public ServiceEntry createServiceEntry(ServiceEntry entry) {
+    public ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry) {
 
-        Vehicle vehicle = vehicleRepository.findById(entry.getVehicle().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
 
-        if (!vehicle.getActive()) {
-            throw new IllegalArgumentException("Service allowed only for active vehicles");
-        }
-
-        Garage garage = garageRepository.findById(entry.getGarage().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Garage not found"));
-
-        if (!garage.getActive()) {
-            throw new IllegalArgumentException("Garage inactive");
-        }
-
-        if (entry.getServiceDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Service date cannot be in future");
-        }
-
-        serviceEntryRepository
-                .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
-                .ifPresent(last -> {
-                    if (entry.getOdometerReading() < last.getOdometerReading()) {
-                        throw new IllegalArgumentException("Odometer must be >= last reading");
-                    }
-                });
-
-        return serviceEntryRepository.save(entry);
+        serviceEntry.setVehicle(vehicle);
+        return serviceEntryRepository.save(serviceEntry);
     }
 
+    // ✅ Get all service entries for a vehicle
     @Override
-    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
+    public List<ServiceEntry> getServiceEntriesByVehicleId(Long vehicleId) {
+
+        if (!vehicleRepository.existsById(vehicleId)) {
+            throw new ResourceNotFoundException("Vehicle not found with id: " + vehicleId);
+        }
+
         return serviceEntryRepository.findByVehicleId(vehicleId);
+    }
+
+    // ✅ Get latest service entry by odometer
+    @Override
+    public ServiceEntry getLatestServiceEntry(Long vehicleId) {
+
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
+
+        return serviceEntryRepository
+                .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No service entries found for vehicle id: " + vehicleId));
+    }
+
+    // ✅ Get service entry by id
+    @Override
+    public ServiceEntry getServiceEntryById(Long id) {
+        return serviceEntryRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("ServiceEntry not found with id: " + id));
+    }
+
+    // ✅ Delete service entry
+    @Override
+    public void deleteServiceEntry(Long id) {
+
+        ServiceEntry entry = serviceEntryRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("ServiceEntry not found with id: " + id));
+
+        serviceEntryRepository.delete(entry);
     }
 }

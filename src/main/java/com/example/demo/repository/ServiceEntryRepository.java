@@ -29,8 +29,13 @@ import com.example.demo.model.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long> {
 
-    List<ServiceEntry> findByVehicle(Vehicle vehicle);
+    // ✅ REQUIRED BY ServiceEntryServiceImpl
+    Optional<ServiceEntry> findTopByVehicleOrderByOdometerReadingDesc(Vehicle vehicle);
+
+    // ✅ REQUIRED BY ServiceEntryServiceImpl
+    List<ServiceEntry> findByVehicleId(Long vehicleId);
 }
