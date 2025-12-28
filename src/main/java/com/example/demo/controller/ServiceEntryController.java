@@ -26,3 +26,33 @@
 //         return ResponseEntity.ok(entries);
 //     }
 // }
+
+package com.example.demo.controller;
+
+import com.example.demo.model.ServiceEntry;
+import com.example.demo.service.ServiceEntryService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/service-entries")
+public class ServiceEntryController {
+
+    private final ServiceEntryService service;
+
+    public ServiceEntryController(ServiceEntryService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public ResponseEntity<ServiceEntry> create(@RequestBody ServiceEntry entry) {
+        return ResponseEntity.ok(service.createServiceEntry(entry));
+    }
+
+    @GetMapping("/vehicle/{vehicleId}")
+    public ResponseEntity<List<ServiceEntry>> getByVehicle(@PathVariable Long vehicleId) {
+        return ResponseEntity.ok(service.getEntriesForVehicle(vehicleId));
+    }
+}
