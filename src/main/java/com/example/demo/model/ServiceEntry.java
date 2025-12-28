@@ -46,55 +46,55 @@
 //     public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
 // }
 
-package com.example.demo.model;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "service_entries")
 public class ServiceEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    private Vehicle vehicle;
-
-    @ManyToOne(optional = false)
-    private Garage garage;
+    @Column(nullable = false)
+    private Long vehicleId;
 
     @Column(nullable = false)
     private String serviceType;
 
+    private String description;
+
     @Column(nullable = false)
     private LocalDate serviceDate;
 
-    @Column(nullable = false)
-    private Integer odometerReading;
+    private Integer mileage;
 
+    // ===== Constructors =====
+    public ServiceEntry() {}
+
+    public ServiceEntry(Long vehicleId, String serviceType, String description,
+                        LocalDate serviceDate, Integer mileage) {
+        this.vehicleId = vehicleId;
+        this.serviceType = serviceType;
+        this.description = description;
+        this.serviceDate = serviceDate;
+        this.mileage = mileage;
+    }
+
+    // ===== Getters & Setters =====
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Long getVehicleId() {
+        return vehicleId;
     }
 
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
-
-    public Garage getGarage() {
-        return garage;
-    }
-
-    public void setGarage(Garage garage) {
-        this.garage = garage;
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
     }
 
     public String getServiceType() {
@@ -105,6 +105,14 @@ public class ServiceEntry {
         this.serviceType = serviceType;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public LocalDate getServiceDate() {
         return serviceDate;
     }
@@ -113,11 +121,11 @@ public class ServiceEntry {
         this.serviceDate = serviceDate;
     }
 
-    public Integer getOdometerReading() {
-        return odometerReading;
+    public Integer getMileage() {
+        return mileage;
     }
 
-    public void setOdometerReading(Integer odometerReading) {
-        this.odometerReading = odometerReading;
+    public void setMileage(Integer mileage) {
+        this.mileage = mileage;
     }
 }
