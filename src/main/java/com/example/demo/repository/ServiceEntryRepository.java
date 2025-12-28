@@ -34,35 +34,31 @@ import java.util.List;
 
 public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long> {
 
-    // already added earlier
+    // Used by ServiceEntryServiceImpl
     List<ServiceEntry> findByVehicleId(Long vehicleId);
 
-    // already added earlier
-    java.util.Optional<ServiceEntry>
-        findTopByVehicleOrderByOdometerReadingDesc(
-            com.example.demo.model.Vehicle vehicle);
+    // ================= FOR TEST CASES =================
 
-    // ✅ REQUIRED BY TESTS
     @Query("""
-        SELECT s FROM ServiceEntry s
-        WHERE s.garage.id = :garageId
-          AND s.odometerReading >= :minOdometer
-    """)
+           SELECT s
+           FROM ServiceEntry s
+           WHERE s.garage.id = :garageId
+           AND s.odometerReading >= :minOdometer
+           """)
     List<ServiceEntry> findByGarageAndMinOdometer(
             @Param("garageId") long garageId,
             @Param("minOdometer") int minOdometer
     );
 
-    // ✅ REQUIRED BY TESTS
     @Query("""
-        SELECT s FROM ServiceEntry s
-        WHERE s.vehicle.id = :vehicleId
-          AND s.serviceDate BETWEEN :startDate AND :endDate
-    """)
+           SELECT s
+           FROM ServiceEntry s
+           WHERE s.vehicle.id = :vehicleId
+           AND s.serviceDate BETWEEN :startDate AND :endDate
+           """)
     List<ServiceEntry> findByVehicleAndDateRange(
             @Param("vehicleId") long vehicleId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
     );
 }
-

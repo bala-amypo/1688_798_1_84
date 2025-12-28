@@ -65,7 +65,7 @@ import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -80,38 +80,35 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         this.vehicleRepository = vehicleRepository;
     }
 
-    /**
-     * ✅ REQUIRED BY TEST CASES
-     * This method is directly called in VehicleServiceHistoryApplicationTests
-     */
+    // ================= CREATE =================
+
     @Override
     public ServiceEntry createServiceEntry(ServiceEntry serviceEntry) {
         if (serviceEntry.getVehicle() == null || serviceEntry.getVehicle().getId() == null) {
-            throw new IllegalArgumentException("Vehicle information is required");
+            throw new IllegalArgumentException("Vehicle is required");
         }
 
         Long vehicleId = serviceEntry.getVehicle().getId();
 
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Vehicle not found with id: " + vehicleId));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
 
         serviceEntry.setVehicle(vehicle);
         return serviceEntryRepository.save(serviceEntry);
     }
 
-    /**
-     * ✅ OPTIONAL API METHOD (SAFE TO KEEP)
-     */
-    @Override
+    // Optional helper (NOT part of interface – no @Override)
     public ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry) {
         Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Vehicle not found with id: " + vehicleId));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
 
         serviceEntry.setVehicle(vehicle);
         return serviceEntryRepository.save(serviceEntry);
     }
+
+    // ================= READ =================
 
     @Override
     public List<ServiceEntry> getAllServiceEntries() {
@@ -121,14 +118,8 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
         return serviceEntryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "ServiceEntry not found with id: " + id));
-    }
-
-    @Override
-    public void deleteServiceEntry(Long id) {
-        ServiceEntry entry = getServiceEntryById(id);
-        serviceEntryRepository.delete(entry);
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("ServiceEntry not found with id: " + id));
     }
 
     @Override
@@ -136,10 +127,27 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository.findByVehicleId(vehicleId);
     }
 
+    // ================= LATEST SERVICE =================
+
     @Override
-    public List<ServiceEntry> getServiceEntriesByDateRange(
-            Long vehicleId, LocalDate startDate, LocalDate endDate) {
-        return serviceEntryRepository
-                .findByVehicleIdAndServiceDateBetween(vehicleId, startDate, endDate);
+    public ServiceEntry getLatestServiceEntry(Long vehicleId) {
+        List<ServiceEntry> entries = serviceEntryRepository.findByVehicleId(vehicleId);
+
+        if (entries.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    "No service entries found for vehicle id: " + vehicleId);
+        }
+
+        return entries.stream()
+                .max(Comparator.comparing(ServiceEntry::getServiceDate))
+                .orElseThrow();
+    }
+
+    // ================= DELETE =================
+
+    @Override
+    public void deleteServiceEntry(Long id) {
+        ServiceEntry entry = getServiceEntryById(id);
+        serviceEntryRepository.delete(entry);
     }
 }
