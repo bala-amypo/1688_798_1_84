@@ -46,7 +46,7 @@
 //     public void setOdometerReading(Integer odometerReading) { this.odometerReading = odometerReading; }
 // }
 
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;  // or javax.persistence if using that
 import java.time.LocalDate;
