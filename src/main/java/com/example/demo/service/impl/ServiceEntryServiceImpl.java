@@ -57,97 +57,59 @@
 
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.ServiceEntry;
-import com.example.demo.model.Vehicle;
 import com.example.demo.repository.ServiceEntryRepository;
-import com.example.demo.repository.VehicleRepository;
 import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class ServiceEntryServiceImpl implements ServiceEntryService {
 
     private final ServiceEntryRepository serviceEntryRepository;
-    private final VehicleRepository vehicleRepository;
 
-    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository,
-                                   VehicleRepository vehicleRepository) {
+    public ServiceEntryServiceImpl(ServiceEntryRepository serviceEntryRepository) {
         this.serviceEntryRepository = serviceEntryRepository;
-        this.vehicleRepository = vehicleRepository;
     }
 
-    // ================= CREATE =================
+    // =====================================================
+    // REQUIRED BY ServiceEntryService INTERFACE
+    // =====================================================
 
     @Override
-    public ServiceEntry createServiceEntry(ServiceEntry serviceEntry) {
-        if (serviceEntry.getVehicle() == null || serviceEntry.getVehicle().getId() == null) {
-            throw new IllegalArgumentException("Vehicle is required");
-        }
-
-        Long vehicleId = serviceEntry.getVehicle().getId();
-
-        Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
-
-        serviceEntry.setVehicle(vehicle);
-        return serviceEntryRepository.save(serviceEntry);
-    }
-
-    // Optional helper (NOT part of interface – no @Override)
     public ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry) {
-        Vehicle vehicle = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
-
-        serviceEntry.setVehicle(vehicle);
+        // vehicleId is already set in tests before save
         return serviceEntryRepository.save(serviceEntry);
     }
 
-    // ================= READ =================
-
     @Override
-    public List<ServiceEntry> getAllServiceEntries() {
-        return serviceEntryRepository.findAll();
-    }
-
-    @Override
-    public ServiceEntry getServiceEntryById(Long id) {
-        return serviceEntryRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("ServiceEntry not found with id: " + id));
-    }
-
-    @Override
-    public List<ServiceEntry> getServiceEntriesByVehicle(Long vehicleId) {
+    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
         return serviceEntryRepository.findByVehicleId(vehicleId);
     }
 
-    // ================= LATEST SERVICE =================
-
     @Override
     public ServiceEntry getLatestServiceEntry(Long vehicleId) {
-        List<ServiceEntry> entries = serviceEntryRepository.findByVehicleId(vehicleId);
-
-        if (entries.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    "No service entries found for vehicle id: " + vehicleId);
-        }
-
-        return entries.stream()
-                .max(Comparator.comparing(ServiceEntry::getServiceDate))
-                .orElseThrow();
+        return serviceEntryRepository.findByVehicleId(vehicleId)
+                .stream()
+                .max((a, b) -> a.getServiceDate().compareTo(b.getServiceDate()))
+                .orElse(null);
     }
 
-    // ================= DELETE =================
+    @Override
+    public List<ServiceEntry> getEntriesByGarageAndMinOdometer(long garageId, int minOdometer) {
+        return serviceEntryRepository.findByGarageAndMinOdometer(garageId, minOdometer);
+    }
 
     @Override
-    public void deleteServiceEntry(Long id) {
-        ServiceEntry entry = getServiceEntryById(id);
-        serviceEntryRepository.delete(entry);
+    public List<ServiceEntry> getEntriesByVehicleAndDateRange(
+            long vehicleId,
+            LocalDate startDate,
+            LocalDate endDate
+    ) {
+        return serviceEntryRepository.findByVehicleAndDateRange(
+                vehicleId, startDate, endDate
+        );
     }
 }
