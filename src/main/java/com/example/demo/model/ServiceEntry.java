@@ -48,8 +48,8 @@
 
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
+import jakarta.persistence.*; // or javax.persistence based on your setup
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -60,16 +60,14 @@ public class ServiceEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Define other fields
     private Long vehicleId;
 
-    private LocalDate serviceDate;
+    private LocalDateTime serviceDate;
 
-    private String description;
+    // Constructor, getters and setters
 
-    private Double cost;
+    public ServiceEntry() {}
 
-    @OneToMany(mappedBy = "serviceEntry", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ServicePart> serviceParts;
-
-    // getters & setters
+    // other fields, getters, setters...
 }

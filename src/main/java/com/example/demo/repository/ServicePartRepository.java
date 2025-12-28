@@ -10,13 +10,9 @@
 
 package com.example.demo.repository;
 
-import com.example.demo.model.ServicePart;
-import com.example.demo.model.ServiceEntry;
+import com.example.demo.entity.ServiceEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface ServicePartRepository extends JpaRepository<ServicePart, Long> {
-
-    List<ServicePart> findByServiceEntry(ServiceEntry serviceEntry);
+public interface ServicePartRepository extends JpaRepository<ServiceEntry, Long> {
+    // Repository methods
 }

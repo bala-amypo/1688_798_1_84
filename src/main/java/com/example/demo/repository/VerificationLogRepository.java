@@ -10,13 +10,10 @@
 
 package com.example.demo.repository;
 
-import com.example.demo.model.VerificationLog;
-import com.example.demo.model.ServiceEntry;
+import com.example.demo.entity.ServiceEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface VerificationLogRepository extends JpaRepository<VerificationLog, Long> {
-
-    List<VerificationLog> findByServiceEntry(ServiceEntry serviceEntry);
+public interface VerificationLogRepository extends JpaRepository<ServiceEntry, Long> {
+    // Repository methods
 }
+
