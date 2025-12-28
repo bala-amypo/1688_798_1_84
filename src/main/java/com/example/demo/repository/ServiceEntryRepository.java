@@ -21,3 +21,16 @@
 //     @Query("SELECT s FROM ServiceEntry s WHERE s.vehicle.id = :vehicleId AND s.serviceDate BETWEEN :from AND :to")
 //     List<ServiceEntry> findByVehicleAndDateRange(@Param("vehicleId") Long vehicleId, @Param("from") LocalDate from, @Param("to") LocalDate to);
 // }
+
+package com.example.demo.repository;
+
+import com.example.demo.model.ServiceEntry;
+import com.example.demo.model.Vehicle;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface ServiceEntryRepository extends JpaRepository<ServiceEntry, Long> {
+
+    List<ServiceEntry> findByVehicle(Vehicle vehicle);
+}
