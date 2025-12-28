@@ -12,32 +12,16 @@ package com.example.demo.service;
 
 import com.example.demo.model.ServiceEntry;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface ServiceEntryService {
 
-    // Create
     ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry);
 
-    // Read
-    ServiceEntry getServiceEntryById(Long serviceEntryId);
+    // Required by tests
+    ServiceEntry createServiceEntry(ServiceEntry serviceEntry);
 
-    List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
+    ServiceEntry getServiceEntryById(Long id);
 
-    ServiceEntry getLatestServiceEntry(Long vehicleId);
-
-    List<ServiceEntry> getEntriesByGarageAndMinOdometer(
-            long garageId,
-            int minOdometer
-    );
-
-    List<ServiceEntry> getEntriesByVehicleAndDateRange(
-            long vehicleId,
-            LocalDate startDate,
-            LocalDate endDate
-    );
-
-    // Delete
-    void deleteServiceEntry(Long serviceEntryId);
+    List<ServiceEntry> getAllServiceEntries();
 }
