@@ -79,7 +79,6 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         this.vehicleRepository = vehicleRepository;
     }
 
-    // ✅ Create service entry
     @Override
     public ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry) {
 
@@ -91,9 +90,8 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository.save(serviceEntry);
     }
 
-    // ✅ Get all service entries for a vehicle
     @Override
-    public List<ServiceEntry> getServiceEntriesByVehicleId(Long vehicleId) {
+    public List<ServiceEntry> getEntriesForVehicle(Long vehicleId) {
 
         if (!vehicleRepository.existsById(vehicleId)) {
             throw new ResourceNotFoundException("Vehicle not found with id: " + vehicleId);
@@ -102,7 +100,6 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository.findByVehicleId(vehicleId);
     }
 
-    // ✅ Get latest service entry by odometer
     @Override
     public ServiceEntry getLatestServiceEntry(Long vehicleId) {
 
@@ -113,24 +110,26 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository
                 .findTopByVehicleOrderByOdometerReadingDesc(vehicle)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("No service entries found for vehicle id: " + vehicleId));
+                        new ResourceNotFoundException(
+                                "No service entries found for vehicle id: " + vehicleId));
     }
 
-    // ✅ Get service entry by id
     @Override
     public ServiceEntry getServiceEntryById(Long id) {
+
         return serviceEntryRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("ServiceEntry not found with id: " + id));
+                        new ResourceNotFoundException(
+                                "ServiceEntry not found with id: " + id));
     }
 
-    // ✅ Delete service entry
     @Override
     public void deleteServiceEntry(Long id) {
 
         ServiceEntry entry = serviceEntryRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("ServiceEntry not found with id: " + id));
+                        new ResourceNotFoundException(
+                                "ServiceEntry not found with id: " + id));
 
         serviceEntryRepository.delete(entry);
     }

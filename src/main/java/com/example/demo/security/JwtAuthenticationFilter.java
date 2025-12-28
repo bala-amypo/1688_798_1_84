@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -31,8 +32,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
 
             if (jwtTokenProvider.validateToken(token)) {
-                var auth = jwtTokenProvider.getAuthentication(token);
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                AbstractAuthenticationToken auth =
+                        (AbstractAuthenticationToken) jwtTokenProvider.getAuthentication(token);
+
+                auth.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }

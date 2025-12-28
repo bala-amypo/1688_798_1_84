@@ -8,13 +8,21 @@
 //     List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
 // }
 
-package com.example.demo.service;
+ppackage com.example.demo.service;
 
 import com.example.demo.model.ServiceEntry;
 
 import java.util.List;
 
 public interface ServiceEntryService {
-    ServiceEntry createServiceEntry(ServiceEntry entry);
+
+    ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry);
+
     List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
+
+    ServiceEntry getLatestServiceEntry(Long vehicleId);
+
+    ServiceEntry getServiceEntryById(Long id);
+
+    void deleteServiceEntry(Long id);
 }
