@@ -8,18 +8,28 @@
 //     List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
 // }
 
-ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry);
+package com.example.demo.service;
 
-List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
+import com.example.demo.model.ServiceEntry;
 
-ServiceEntry getLatestServiceEntry(Long vehicleId);
+import java.time.LocalDate;
+import java.util.List;
 
-List<ServiceEntry> getEntriesByGarageAndMinOdometer(long garageId, int minOdometer);
+public interface ServiceEntryService {
 
-List<ServiceEntry> getEntriesByVehicleAndDateRange(
-        long vehicleId,
-        LocalDate startDate,
-        LocalDate endDate
-);
+    ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry);
 
-void deleteServiceEntry(Long serviceEntryId);
+    List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
+
+    ServiceEntry getLatestServiceEntry(Long vehicleId);
+
+    List<ServiceEntry> getEntriesByGarageAndMinOdometer(long garageId, int minOdometer);
+
+    List<ServiceEntry> getEntriesByVehicleAndDateRange(
+            long vehicleId,
+            LocalDate startDate,
+            LocalDate endDate
+    );
+
+    void deleteServiceEntry(Long serviceEntryId);
+}
