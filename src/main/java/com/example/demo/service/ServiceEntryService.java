@@ -8,24 +8,18 @@
 //     List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
 // }
 
-package com.example.demo.service;
+ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry);
 
-import com.example.demo.model.ServiceEntry;
-import java.util.List;
+List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
 
-public interface ServiceEntryService {
+ServiceEntry getLatestServiceEntry(Long vehicleId);
 
-    // ✅ used by controller
-    ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry);
+List<ServiceEntry> getEntriesByGarageAndMinOdometer(long garageId, int minOdometer);
 
-    // ✅ REQUIRED by hidden tests
-    ServiceEntry createServiceEntry(ServiceEntry serviceEntry);
+List<ServiceEntry> getEntriesByVehicleAndDateRange(
+        long vehicleId,
+        LocalDate startDate,
+        LocalDate endDate
+);
 
-    List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
-
-    ServiceEntry getLatestServiceEntry(Long vehicleId);
-
-    ServiceEntry getServiceEntryById(Long id);
-
-    void deleteServiceEntry(Long id);
-}
+void deleteServiceEntry(Long serviceEntryId);

@@ -75,12 +75,11 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     }
 
     // =====================================================
-    // REQUIRED BY ServiceEntryService INTERFACE
+    // METHODS DEFINED IN ServiceEntryService
     // =====================================================
 
     @Override
     public ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry) {
-        // vehicleId is already set in tests before save
         return serviceEntryRepository.save(serviceEntry);
     }
 
@@ -111,5 +110,10 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         return serviceEntryRepository.findByVehicleAndDateRange(
                 vehicleId, startDate, endDate
         );
+    }
+
+    @Override
+    public void deleteServiceEntry(Long serviceEntryId) {
+        serviceEntryRepository.deleteById(serviceEntryId);
     }
 }
