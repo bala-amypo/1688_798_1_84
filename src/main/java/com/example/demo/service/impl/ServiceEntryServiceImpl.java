@@ -63,6 +63,7 @@ import com.example.demo.service.ServiceEntryService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -75,12 +76,20 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     }
 
     // =====================================================
-    // METHODS DEFINED IN ServiceEntryService
+    // CREATE
     // =====================================================
-
     @Override
     public ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry) {
         return serviceEntryRepository.save(serviceEntry);
+    }
+
+    // =====================================================
+    // READ
+    // =====================================================
+    @Override
+    public ServiceEntry getServiceEntryById(Long serviceEntryId) {
+        return serviceEntryRepository.findById(serviceEntryId)
+                .orElse(null);
     }
 
     @Override
@@ -92,13 +101,18 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
     public ServiceEntry getLatestServiceEntry(Long vehicleId) {
         return serviceEntryRepository.findByVehicleId(vehicleId)
                 .stream()
-                .max((a, b) -> a.getServiceDate().compareTo(b.getServiceDate()))
+                .max(Comparator.comparing(ServiceEntry::getServiceDate))
                 .orElse(null);
     }
 
     @Override
-    public List<ServiceEntry> getEntriesByGarageAndMinOdometer(long garageId, int minOdometer) {
-        return serviceEntryRepository.findByGarageAndMinOdometer(garageId, minOdometer);
+    public List<ServiceEntry> getEntriesByGarageAndMinOdometer(
+            long garageId,
+            int minOdometer
+    ) {
+        return serviceEntryRepository.findByGarageAndMinOdometer(
+                garageId, minOdometer
+        );
     }
 
     @Override
@@ -112,6 +126,9 @@ public class ServiceEntryServiceImpl implements ServiceEntryService {
         );
     }
 
+    // =====================================================
+    // DELETE
+    // =====================================================
     @Override
     public void deleteServiceEntry(Long serviceEntryId) {
         serviceEntryRepository.deleteById(serviceEntryId);

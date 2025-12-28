@@ -17,13 +17,20 @@ import java.util.List;
 
 public interface ServiceEntryService {
 
+    // Create
     ServiceEntry createServiceEntry(Long vehicleId, ServiceEntry serviceEntry);
+
+    // Read
+    ServiceEntry getServiceEntryById(Long serviceEntryId);
 
     List<ServiceEntry> getEntriesForVehicle(Long vehicleId);
 
     ServiceEntry getLatestServiceEntry(Long vehicleId);
 
-    List<ServiceEntry> getEntriesByGarageAndMinOdometer(long garageId, int minOdometer);
+    List<ServiceEntry> getEntriesByGarageAndMinOdometer(
+            long garageId,
+            int minOdometer
+    );
 
     List<ServiceEntry> getEntriesByVehicleAndDateRange(
             long vehicleId,
@@ -31,5 +38,6 @@ public interface ServiceEntryService {
             LocalDate endDate
     );
 
+    // Delete
     void deleteServiceEntry(Long serviceEntryId);
 }
